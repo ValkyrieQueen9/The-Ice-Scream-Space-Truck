@@ -54,3 +54,9 @@ TagManager:
   - name: Ingredients
     uniqueID: 3280166201
     locked: 0
+  - name: Scoops
+    uniqueID: 784785665
+    locked: 0
+  - name: Toppings
+    uniqueID: 2829179007
+    locked: 0

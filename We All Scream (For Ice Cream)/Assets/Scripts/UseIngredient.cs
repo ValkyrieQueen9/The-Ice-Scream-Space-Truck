@@ -9,44 +9,56 @@ public class UseIngredient : MonoBehaviour
     public bool topping = false;
     public bool sauce = false;
 
+    [Header("Ingredient Flavour")]
+    public bool galaxy = false;
+    public bool rainbow = false;
+    public bool neon = false;
+
+    private SpriteRenderer Rend;
+
+    //Flavours
+    private Sprite galaxyScoop, rainbowScoop, neonTop;
+
+    //Cone
     private GameObject cone;
+    private SpriteRenderer coneRend;
+
+    //Scoops
     private GameObject scoop1;
     private GameObject scoop2;
-    private SpriteRenderer Rend;
-    private Sprite galaxyFlavour, rainbowFlavour, galaxyScoop, rainbowScoop;
-    private SpriteRenderer coneRend;
     private SpriteRenderer scoop1Rend;
     private SpriteRenderer scoop2Rend;
 
-
+    //Toppings
+    private GameObject topping1;
+    private GameObject topping2;
+    private SpriteRenderer topping1Rend;
+    private SpriteRenderer topping2Rend;
+    
     private void Start()
     {
         Rend = GetComponent<SpriteRenderer>();
-        galaxyFlavour = Resources.Load<Sprite>("flavours/galaxyIceCream");
-        rainbowFlavour = Resources.Load<Sprite>("flavours/rainbowIceCream");
+
+        //Flavours
         galaxyScoop = Resources.Load<Sprite>("scoops/galaxyScoop");
         rainbowScoop = Resources.Load<Sprite>("scoops/rainbowScoop");
+        neonTop = Resources.Load<Sprite>("toppings/neonTopping");
+
+        //Cone
         cone = GameObject.FindGameObjectWithTag("Cone");
+
+        //Scoops
         scoop1 = GameObject.Find("Scoop1");
         scoop2 = GameObject.Find("Scoop2");
         scoop1Rend = scoop1.GetComponent<SpriteRenderer>();
         scoop2Rend = scoop2.GetComponent<SpriteRenderer>();
 
-    }
+        //Toppings
+        topping1 = GameObject.Find("Topping1");
+        topping2 = GameObject.Find("Topping2");
+        topping1Rend = topping1.GetComponent<SpriteRenderer>();
+        topping2Rend = topping2.GetComponent<SpriteRenderer>();
 
-    private void Update()
-    {
-           if (iceCream)
-        {
-            Rend.sprite = galaxyFlavour;
-            scoop1Rend.sprite = galaxyScoop;
-        }
-        if (topping)
-        {
-            Rend.sprite = rainbowFlavour;
-            scoop2Rend.sprite = rainbowScoop;
-        }
-        
     }
 
     //When ingredient (script is attached to each ingredient) is clicked check for which ingredient type and flavour it is. 
@@ -57,11 +69,67 @@ public class UseIngredient : MonoBehaviour
     //In each ingredient function check whether any other ingredients have been placed, if none add in lowest tier.
     //Maybe use invisible sprites that switch out art when triggered rather than creating new objects??
 
-    void ChangeSprite()
+    public void addIngredient()
     {
-        SpriteRenderer currentSprite = GetComponent<SpriteRenderer>();
-        Sprite galaxyIceCream = Resources.Load<Sprite>("galaxyIceCream");
-        currentSprite.sprite = galaxyIceCream;
+        if (iceCream)
+        {
+            //Check if any scoops have been added to first layer of cone(scoop1)
+            if(scoop1Rend.sprite == null)
+            {
+                if (galaxy)
+                    {
+                        scoop1Rend.sprite = galaxyScoop;
+                    }
+                if (rainbow)
+                    {
+                        scoop1Rend.sprite = rainbowScoop;
+                    }
+            }
+
+            //Check if any scoops have been added to second layer of cone(scoop2)
+            else if (scoop2Rend.sprite == null)
+            {
+                if (galaxy)
+                    {
+                        scoop2Rend.sprite = galaxyScoop;
+                    }
+                if (rainbow)
+                    {
+                        scoop2Rend.sprite = rainbowScoop;
+                    }
+            }
+
+            else
+            {
+                Debug.Log("Too many scoops!");
+            }
+
+            //if a scoop has been added only add to scoop2
+        }
+
+        if (topping)
+        {
+            if (topping1Rend.sprite == null)
+            {
+                if (neon)
+                {
+                    topping1Rend.sprite = neonTop;
+                }
+            }
+
+            else if(topping2Rend.sprite == null)
+            {
+                if (neon)
+                {
+                    topping2Rend.sprite = neonTop;
+                }
+            }
+
+            else
+            {
+                Debug.Log("Too many toppings!");
+            }
+        }
     }
 
 }
