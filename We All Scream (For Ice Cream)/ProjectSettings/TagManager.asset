@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Cone
   layers:
   - Default
   - TransparentFX
@@ -40,4 +41,16 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 755879307
+    locked: 0
+  - name: Interior
+    uniqueID: 2467188761
+    locked: 0
+  - name: Machines
+    uniqueID: 3809211935
+    locked: 0
+  - name: Ingredients
+    uniqueID: 3280166201
     locked: 0
