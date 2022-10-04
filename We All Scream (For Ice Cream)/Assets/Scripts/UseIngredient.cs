@@ -24,16 +24,12 @@ public class UseIngredient : MonoBehaviour
     private SpriteRenderer coneRend;
 
     //Scoops
-    private GameObject scoop1;
-    private GameObject scoop2;
-    private SpriteRenderer scoop1Rend;
-    private SpriteRenderer scoop2Rend;
+    private GameObject scoop1, scoop2;
+    private SpriteRenderer scoop1Rend, scoop2Rend;
 
     //Toppings
-    private GameObject topping1;
-    private GameObject topping2;
-    private SpriteRenderer topping1Rend;
-    private SpriteRenderer topping2Rend;
+    private GameObject topping1, topping2;
+    private SpriteRenderer topping1Rend, topping2Rend;
     
     private void Start()
     {
@@ -61,8 +57,8 @@ public class UseIngredient : MonoBehaviour
 
     }
 
-    //When ingredient (script is attached to each ingredient) is clicked check for which ingredient type and flavour it is. 
-    //- use bools triggered when script is set to decide the items type e.g. if ingredient is sprinkles, mark topping as true in inspector 
+    //When ingredient (script is attached to each "empty" ingredient sprite) is clicked check for which ingredient type and flavour it is.
+    //- use bools triggered manually when script is set to decide the items type e.g. if ingredient is sprinkles, mark topping as true in inspector 
 
     //When ingredient type found trigger special function e.g. ice cream function
 
