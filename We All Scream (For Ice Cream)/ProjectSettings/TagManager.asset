@@ -12,8 +12,8 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
+  - ErrorMsgOverlay
+  - ErrorMsgText
   - 
   - 
   - 
@@ -59,4 +59,10 @@ TagManager:
     locked: 0
   - name: Toppings
     uniqueID: 2829179007
+    locked: 0
+  - name: ErrorMsgsUI
+    uniqueID: 1272182209
+    locked: 0
+  - name: CustomerDiagloueUI
+    uniqueID: 3928417587
     locked: 0

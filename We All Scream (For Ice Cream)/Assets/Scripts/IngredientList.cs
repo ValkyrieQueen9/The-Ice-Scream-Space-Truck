@@ -5,6 +5,4 @@ using UnityEngine;
 public class IngredientList
 {
     Sprite galaxyIceCream = Resources.Load<Sprite>("galaxyIceCream");
-
-
 }
