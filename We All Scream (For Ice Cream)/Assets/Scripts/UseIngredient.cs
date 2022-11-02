@@ -12,12 +12,13 @@ public class UseIngredient : MonoBehaviour
     public bool cone = false;
 
     [Header("Ingredient Flavour")]
+    public bool plain = false;
     public bool galaxy = false;
     public bool cosmic = false;
     public bool rainbow = false;
     public bool neon = false;
     public bool red = false;
-    public bool plain = false;
+    
 
     private SpriteRenderer Rend;
 
