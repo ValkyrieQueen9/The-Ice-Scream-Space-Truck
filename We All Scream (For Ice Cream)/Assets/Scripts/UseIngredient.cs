@@ -4,6 +4,16 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class UseIngredient : MonoBehaviour
+
+//When ingredient (script is attached to button) is clicked check for which ingredient type and flavour it is.
+//- use bools triggered manually when script is set to decide the items type e.g. if ingredient is sprinkles, mark topping as true in inspector 
+
+//When ingredient type found trigger special function e.g. ice cream function
+
+//In each ingredient function check whether any other ingredients have been placed, if none add in lowest tier.
+//Maybe use invisible sprites that switch out art when triggered rather than creating new objects??
+
+
 {
     [Header("Ingredient Type")]
     public bool iceCream = false;
@@ -115,7 +125,6 @@ public class UseIngredient : MonoBehaviour
         sauce4Rend = sauce4.GetComponent<SpriteRenderer>();
         sauce5Rend = sauce5.GetComponent<SpriteRenderer>();
 
-
         //Toppings
         topping1 = GameObject.Find("Topping1");
         topping2 = GameObject.Find("Topping2");
@@ -128,14 +137,6 @@ public class UseIngredient : MonoBehaviour
         topping4Rend = topping4.GetComponent<SpriteRenderer>();
         topping5Rend = topping5.GetComponent<SpriteRenderer>();
     }
-
-    //When ingredient (script is attached to each "empty" ingredient sprite) is clicked check for which ingredient type and flavour it is.
-    //- use bools triggered manually when script is set to decide the items type e.g. if ingredient is sprinkles, mark topping as true in inspector 
-
-    //When ingredient type found trigger special function e.g. ice cream function
-
-    //In each ingredient function check whether any other ingredients have been placed, if none add in lowest tier.
-    //Maybe use invisible sprites that switch out art when triggered rather than creating new objects??
 
     public void addIngredient()
     {
