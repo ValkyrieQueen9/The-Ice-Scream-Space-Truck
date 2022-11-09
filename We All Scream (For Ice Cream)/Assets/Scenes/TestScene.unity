@@ -148,13 +148,35 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 112453446}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8ae1a3b2767552b4b84e8f4f7e89e169, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   randomiserButton: 0
-  iceCreamSelection: {fileID: 0}
+  selection: 
+  ingredients:
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  ticketIceCream1: 
+  ticketIceCream2: 
+  ticketIceCream3: 
+  ticketIceCream4: 
+  ticketIceCream5: 
+  ticketSauce: 
+  ticketTopping: 
 --- !u!4 &112453448
 Transform:
   m_ObjectHideFlags: 0
@@ -177,11 +199,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 112453446}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b71453deaa1e72744a76447340013900, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  randomiserButton: 0
+  selection: null
 --- !u!1 &211747490
 GameObject:
   m_ObjectHideFlags: 0

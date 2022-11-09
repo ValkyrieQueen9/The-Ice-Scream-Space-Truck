@@ -19,6 +19,7 @@ public class CustomerOrders : MonoBehaviour
 
 
     public bool randomiserButton = false;
+    public string selection = "null";
 
     //Lists
     public string[] ingredients = new string[14];
@@ -93,9 +94,9 @@ public class CustomerOrders : MonoBehaviour
         scoop2Rend = scoop2.GetComponent<SpriteRenderer>();
         scoop3Rend = scoop3.GetComponent<SpriteRenderer>();
         scoop4Rend = scoop4.GetComponent<SpriteRenderer>();
-        scoop5Rend = scoop5.GetComponent<SpriteRenderer>();
+        //scoop5Rend = scoop5.GetComponent<SpriteRenderer>();
 
-        //Sauces Renderer
+        //Sauces Renderer - Only one exists?
         sauce1 = GameObject.Find("Sauce1");
         sauce2 = GameObject.Find("Sauce2");
         sauce3 = GameObject.Find("Sauce3");
@@ -107,7 +108,7 @@ public class CustomerOrders : MonoBehaviour
         sauce4Rend = sauce4.GetComponent<SpriteRenderer>();
         sauce5Rend = sauce5.GetComponent<SpriteRenderer>();
 
-        //Toppings Renderer
+        //Toppings Renderer - Only one exists?
         topping1 = GameObject.Find("Topping1");
         topping2 = GameObject.Find("Topping2");
         topping3 = GameObject.Find("Topping3");
@@ -154,9 +155,11 @@ public class CustomerOrders : MonoBehaviour
             ticketIceCream5 = ingredients[Randomiser(1, 5)];
             ticketSauce = ingredients[Randomiser(6, 9)];
             ticketTopping = ingredients[Randomiser(10, 14)];
-        }
 
-        Debug.Log(ticketIceCream1);
+        }
+            selection = ticketIceCream1;
+            Debug.Log("Chosen Ingredient: " + selection.ToString());
+        
     }
 
     private int Randomiser(int x, int y)

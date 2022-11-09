@@ -14,7 +14,7 @@ public class TestScript : MonoBehaviour
     string Ingredient;
     public bool randomiserButton = false;
     public string selection = "null";
-    public bool currentOrder = false;
+    //public bool currentOrder = false;
 
     private void Start()
     {
@@ -51,13 +51,14 @@ public class TestScript : MonoBehaviour
         //Create while loop for orders:
         //While currentOrder == true, don't run code. When false, run code and change current order to true. Change to false when an order is submitted.
 
+        /*
         while (currentOrder == false)
         {
             //Create variables for each ingredient space
             //Randomise the variables ingredient using randomiser.
             //Trigger currentOrder to true - trigger to false when order is successfully submitted (later in script?)
         }
-
+        */
         //if statements to determine which randomised item was chosen and to change the order ticket items.
         //All sprites needed here and new sprites for tickets
 
