@@ -4,30 +4,72 @@ using UnityEngine;
 
 public class TestScript : MonoBehaviour
 {
-    Sprite animal, fruit, flower;
-
     //Can't use Sprites as arrays?
     //If using string or int, must find way to define which sprite/flavour it is!
     //Make array with all ingredients? Using ranges 3-7, 8-10 to choose ingredient type?
     //This way can make ingredients ordered via index? i.e: ingredients[2] = bloodySauce ///// if random == index 2 = sprite bloody sauce? then trigger orderBloodySauce
+    //To check order submissions - if index 7 = acid sauce, if sauce1 == acidSauce then sauce bool is true, if all builder bools are true == success 
 
-    int[] numberArray = new int[4];
-    Sprite[] spriteArray = new Sprite[2];
+    string[] ingredients = new string[14];
+    string Ingredient;
+    public bool randomiserButton = false;
+    public string selection = "null";
+    public bool currentOrder = false;
 
     private void Start()
     {
-
-        numberArray[0] = 10;
-        numberArray[1] = 13;
-        numberArray[2] = 13;
-        numberArray[3] = 13;
-
-        Debug.Log(numberArray[3]);
-
-        spriteArray[0] = animal;
-        spriteArray[1] = fruit;
-        spriteArray[2] = flower;
-
-        Debug.Log(spriteArray[2]);
+        //Cone
+        ingredients[0] = "plainCone";
+        //Scoops
+        ingredients[1] = "boneScoop";
+        ingredients[2] = "cosmicScoop";
+        ingredients[3] = "magmaScoop";
+        ingredients[4] = "meatScoop";
+        ingredients[5] = "tropicalScoop";
+        //Sauces
+        ingredients[6] = "acidSauce";
+        ingredients[7] = "bloodySauce";
+        ingredients[8] = "bloodyUnicornSauce";
+        ingredients[9] = "soulSauce";
+        //Toppings
+        ingredients[10] = "batteriesTop";
+        ingredients[11] = "eyeballsTop";
+        ingredients[12] = "gemsTop";
+        ingredients[13] = "glassTop";
+        ingredients[14] = "nettlesTop";
     }
+
+    private void Update()
+    {
+        if (randomiserButton)
+        {
+            Ingredient = ingredients[Randomiser(1, 5)];
+        }
+        selection = Ingredient;
+        Debug.Log(selection.ToString());
+
+        //Create while loop for orders:
+        //While currentOrder == true, don't run code. When false, run code and change current order to true. Change to false when an order is submitted.
+
+        while (currentOrder == false)
+        {
+            //Create variables for each ingredient space
+            //Randomise the variables ingredient using randomiser.
+            //Trigger currentOrder to true - trigger to false when order is successfully submitted (later in script?)
+        }
+
+        //if statements to determine which randomised item was chosen and to change the order ticket items.
+        //All sprites needed here and new sprites for tickets
+
+    }
+
+    private int Randomiser(int x, int y)
+    {
+        int index = Random.Range(x, y);
+        return index;
+    }
+
+
+
+
 }

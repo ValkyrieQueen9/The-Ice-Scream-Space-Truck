@@ -17,10 +17,23 @@ public class CustomerOrders : MonoBehaviour
     //Separate boss customer order later
     //Create simple successful order counter.
 
-    public bool randomiserButton = false;
-    public Sprite iceCreamSelection;
-    int runOnce = 0;
 
+    public bool randomiserButton = false;
+
+    //Lists
+    public string[] ingredients = new string[14];
+
+    //Orders - Variables to store the selected ingredients
+    private int ingredientIndex;
+    public string ticketIceCream1;
+    public string ticketIceCream2;
+    public string ticketIceCream3;
+    public string ticketIceCream4;
+    public string ticketIceCream5;
+    public string ticketSauce;
+    public string ticketTopping;
+
+    //Renderers
     private SpriteRenderer Rend;
 
     //Flavours
@@ -42,26 +55,11 @@ public class CustomerOrders : MonoBehaviour
     private GameObject topping1, topping2, topping3, topping4, topping5;
     private SpriteRenderer topping1Rend, topping2Rend, topping3Rend, topping4Rend, topping5Rend;
 
-    //Lists
-    private Sprite[] iceCreams = new Sprite[5];
-    private Sprite[] sauces = new Sprite[4];
-    Sprite[] toppings = new Sprite[4];
-
-    //Orders - Variables to store the selected ingredients
-    private int ingredientIndex;
-    private Sprite orderIceCream1;
-    private Sprite orderIceCream2;
-    private Sprite orderIceCream3;
-    private Sprite orderIceCream4;
-    private Sprite orderIceCream5;
-    private Sprite orderSauce;
-    private Sprite orderTopping;
-
     private void Start()
     {
         Rend = GetComponent<SpriteRenderer>();
 
-        //Flavours
+        //Ingredient Sprites
         plainCone = Resources.Load<Sprite>("cones/plainCone");
 
         boneScoop = Resources.Load<Sprite>("scoops/boneScoop");
@@ -81,11 +79,11 @@ public class CustomerOrders : MonoBehaviour
         glassTop = Resources.Load<Sprite>("toppings/glassTopping");
         nettlesTop = Resources.Load<Sprite>("toppings/nettlesTopping");
 
-        //Cone
+        //Cone Renderer
         buildCone = GameObject.FindGameObjectWithTag("Cone");
         buildConeRend = buildCone.GetComponent<SpriteRenderer>();
 
-        //Scoops
+        //Scoops Renderer
         scoop1 = GameObject.Find("Scoop1");
         scoop2 = GameObject.Find("Scoop2");
         scoop3 = GameObject.Find("Scoop3");
@@ -97,7 +95,7 @@ public class CustomerOrders : MonoBehaviour
         scoop4Rend = scoop4.GetComponent<SpriteRenderer>();
         scoop5Rend = scoop5.GetComponent<SpriteRenderer>();
 
-        //Sauces
+        //Sauces Renderer
         sauce1 = GameObject.Find("Sauce1");
         sauce2 = GameObject.Find("Sauce2");
         sauce3 = GameObject.Find("Sauce3");
@@ -109,7 +107,7 @@ public class CustomerOrders : MonoBehaviour
         sauce4Rend = sauce4.GetComponent<SpriteRenderer>();
         sauce5Rend = sauce5.GetComponent<SpriteRenderer>();
 
-        //Toppings
+        //Toppings Renderer
         topping1 = GameObject.Find("Topping1");
         topping2 = GameObject.Find("Topping2");
         topping3 = GameObject.Find("Topping3");
@@ -121,41 +119,49 @@ public class CustomerOrders : MonoBehaviour
         topping4Rend = topping4.GetComponent<SpriteRenderer>();
         topping5Rend = topping5.GetComponent<SpriteRenderer>();
 
-        //Lists
-        iceCreams[0] = boneScoop;
-        iceCreams[1] = cosmicScoop;
-        iceCreams[2] = magmaScoop;
-        iceCreams[3] = meatScoop;
-        iceCreams[4] = tropicalScoop;
-
-        sauces[0] = acidSauce;
-        sauces[1] = bloodySauce;
-        sauces[2] = bloodyUnicornSauce;
-        sauces[3] = soulSauce;
-
-        toppings[0] = batteriesTop;
-        toppings[1] = eyeballsTop;
-        toppings[2] = gemsTop;
-        toppings[3] = glassTop;
-        toppings[4] = nettlesTop;
+        //Ingredient List
+        ingredients[0] = "plainCone";
+        
+        ingredients[1] = "boneScoop";
+        ingredients[2] = "cosmicScoop";
+        ingredients[3] = "magmaScoop";
+        ingredients[4] = "meatScoop";
+        ingredients[5] = "tropicalScoop";
+       
+        ingredients[6] = "acidSauce";
+        ingredients[7] = "bloodySauce";
+        ingredients[8] = "bloodyUnicornSauce";
+        ingredients[9] = "soulSauce";
+        
+        ingredients[10] = "batteriesTop";
+        ingredients[11] = "eyeballsTop";
+        ingredients[12] = "gemsTop";
+        ingredients[13] = "glassTop";
+        ingredients[14] = "nettlesTop";
 
     }
 
     private void Update()
     {
-        /*
-        if(randomiserButton == true && runOnce == 0)
+        //TEST
+        if (randomiserButton)
         {
-        orderIceCream1 = iceCreams[Randomiser()];
-        runOnce += 1;
+            //Cone randomiser not needed currently
+            ticketIceCream1 = ingredients[Randomiser(1, 5)];
+            ticketIceCream2 = ingredients[Randomiser(1, 5)];
+            ticketIceCream3 = ingredients[Randomiser(1, 5)];
+            ticketIceCream4 = ingredients[Randomiser(1, 5)];
+            ticketIceCream5 = ingredients[Randomiser(1, 5)];
+            ticketSauce = ingredients[Randomiser(6, 9)];
+            ticketTopping = ingredients[Randomiser(10, 14)];
         }
-        iceCreamSelection = iceCreams[2];
-        */
+
+        Debug.Log(ticketIceCream1);
     }
 
-    private int Randomiser()
+    private int Randomiser(int x, int y)
     {
-        int index = Random.Range(0, 5);
+        int index = Random.Range(x, y);
         return index;
     }
 }
