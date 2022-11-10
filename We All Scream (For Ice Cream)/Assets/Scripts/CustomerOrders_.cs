@@ -19,7 +19,7 @@ public class CustomerOrders_ : MonoBehaviour
     public bool randomiserButton = false;
     public string selection = "null";
 
-    public string[] ingredients = new string[14];
+    public string[] ingredients = new string[15];
 
     //Orders
     public string ticketIceCream1;
@@ -153,7 +153,7 @@ public class CustomerOrders_ : MonoBehaviour
         }
         //selection = ticketIceCream1;
         //Debug.Log(selection.ToString());
-        Debug.Log("Randomiser: " + Randomiser(1, 9).ToString());
+        //Debug.Log("Randomiser: " + Randomiser(1, 9).ToString());
     }
 
     private int Randomiser(int x, int y)

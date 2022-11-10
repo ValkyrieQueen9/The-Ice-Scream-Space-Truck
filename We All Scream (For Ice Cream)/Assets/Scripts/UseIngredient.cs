@@ -67,6 +67,7 @@ public class UseIngredient : MonoBehaviour
     //ErrorMsgs
     [HideInInspector]
     public GameObject errorMsgs;
+    [HideInInspector]
     public UIManager UIManager;
 
     private void Start()
@@ -111,7 +112,7 @@ public class UseIngredient : MonoBehaviour
         scoop2Rend = scoop2.GetComponent<SpriteRenderer>();
         scoop3Rend = scoop3.GetComponent<SpriteRenderer>();
         scoop4Rend = scoop4.GetComponent<SpriteRenderer>();
-        //scoop5Rend = scoop5.GetComponent<SpriteRenderer>();
+        scoop5Rend = scoop5.GetComponent<SpriteRenderer>();
 
         //Sauces
         sauce1 = GameObject.Find("Sauce1");
