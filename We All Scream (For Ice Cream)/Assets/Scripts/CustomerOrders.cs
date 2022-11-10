@@ -20,6 +20,7 @@ public class CustomerOrders : MonoBehaviour
 
     public bool randomiserButton = false;
     public string selection = "null";
+    string Ingredient;
 
     //Lists
     public string[] ingredients = new string[14];
@@ -122,13 +123,13 @@ public class CustomerOrders : MonoBehaviour
 
         //Ingredient List
         ingredients[0] = "plainCone";
-        
+
         ingredients[1] = "boneScoop";
         ingredients[2] = "cosmicScoop";
         ingredients[3] = "magmaScoop";
         ingredients[4] = "meatScoop";
         ingredients[5] = "tropicalScoop";
-       
+
         ingredients[6] = "acidSauce";
         ingredients[7] = "bloodySauce";
         ingredients[8] = "bloodyUnicornSauce";
@@ -155,11 +156,11 @@ public class CustomerOrders : MonoBehaviour
             ticketIceCream5 = ingredients[Randomiser(1, 5)];
             ticketSauce = ingredients[Randomiser(6, 9)];
             ticketTopping = ingredients[Randomiser(10, 14)];
+            Ingredient = ingredients[Randomiser(1, 5)];
 
         }
-            selection = ticketIceCream1;
-            Debug.Log("Chosen Ingredient: " + selection.ToString());
-        
+        selection = ingredients[5];
+        Debug.Log(ingredients[2].ToString());
     }
 
     private int Randomiser(int x, int y)
