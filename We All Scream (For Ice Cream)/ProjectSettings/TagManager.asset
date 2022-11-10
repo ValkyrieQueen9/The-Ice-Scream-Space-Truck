@@ -57,6 +57,9 @@ TagManager:
   - name: Scoops
     uniqueID: 784785665
     locked: 0
+  - name: Sauces
+    uniqueID: 3192499217
+    locked: 0
   - name: Toppings
     uniqueID: 2829179007
     locked: 0

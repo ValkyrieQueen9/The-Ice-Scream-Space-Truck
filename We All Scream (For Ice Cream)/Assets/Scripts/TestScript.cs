@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class TestScript : MonoBehaviour
 {
-    //Can't use Sprites as arrays?
-    //If using string or int, must find way to define which sprite/flavour it is!
     //Make array with all ingredients? Using ranges 3-7, 8-10 to choose ingredient type?
     //This way can make ingredients ordered via index? i.e: ingredients[2] = bloodySauce ///// if random == index 2 = sprite bloody sauce? then trigger orderBloodySauce
     //To check order submissions - if index 7 = acid sauce, if sauce1 == acidSauce then sauce bool is true, if all builder bools are true == success 
@@ -47,6 +45,7 @@ public class TestScript : MonoBehaviour
         }
         selection = Ingredient;
         Debug.Log(selection.ToString());
+        Debug.Log("Randomiser: " + Randomiser(1, 9).ToString());
 
         //Create while loop for orders:
         //While currentOrder == true, don't run code. When false, run code and change current order to true. Change to false when an order is submitted.
@@ -61,13 +60,13 @@ public class TestScript : MonoBehaviour
         */
         //if statements to determine which randomised item was chosen and to change the order ticket items.
         //All sprites needed here and new sprites for tickets
-
     }
 
     private int Randomiser(int x, int y)
     {
         int index = Random.Range(x, y);
         return index;
+        
     }
 
 

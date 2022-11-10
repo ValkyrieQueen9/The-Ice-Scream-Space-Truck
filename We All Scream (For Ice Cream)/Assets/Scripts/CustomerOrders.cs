@@ -4,20 +4,21 @@ using UnityEngine;
 
 public class CustomerOrders : MonoBehaviour
 {
+   //NOT USING THIS SCRIPT - USE CUSTOMER ORDERS_.CS
+
 
     //Script Purpose: Randomise customer orders and output selection to inspector and order ticket. 
     //Randomise Customer at the window and trigger shutter movement. When Ice Cream is submitted check it against the randomised.
 
-    //Add all ingredient Sprites - copy from use ingredients
+    //----Add all ingredient Sprites - copy from use ingredients
     //New ingredient sprites needed for orders
-    //Create lists of each ingredient type and customers for each level
-    //OPTION: Create one list for each ing type and add ingredients after each level
+    //----Create lists of each ingredient type and customers for each level
     //Create randomiser function and output to inspector, then later, to order ticket
     //Create function to check submitted ice cream against randomised result
     //Separate boss customer order later
     //Create simple successful order counter.
 
-
+    /*
     public bool randomiserButton = false;
     public string selection = "null";
     string Ingredient;
@@ -34,6 +35,14 @@ public class CustomerOrders : MonoBehaviour
     public string ticketIceCream5;
     public string ticketSauce;
     public string ticketTopping;
+    */
+
+    //TEST
+    string[] ingredients = new string[14];
+    string Ingredient;
+    public bool randomiserButton = false;
+    public string selection = "null";
+
 
     //Renderers
     private SpriteRenderer Rend;
@@ -121,6 +130,7 @@ public class CustomerOrders : MonoBehaviour
         topping4Rend = topping4.GetComponent<SpriteRenderer>();
         topping5Rend = topping5.GetComponent<SpriteRenderer>();
 
+        /*
         //Ingredient List
         ingredients[0] = "plainCone";
 
@@ -140,12 +150,34 @@ public class CustomerOrders : MonoBehaviour
         ingredients[12] = "gemsTop";
         ingredients[13] = "glassTop";
         ingredients[14] = "nettlesTop";
+        */
+
+        //TEST
+        //Cone
+        ingredients[0] = "plainCone";
+        //Scoops
+        ingredients[1] = "boneScoop";
+        ingredients[2] = "cosmicScoop";
+        ingredients[3] = "magmaScoop";
+        ingredients[4] = "meatScoop";
+        ingredients[5] = "tropicalScoop";
+        //Sauces
+        ingredients[6] = "acidSauce";
+        ingredients[7] = "bloodySauce";
+        ingredients[8] = "bloodyUnicornSauce";
+        ingredients[9] = "soulSauce";
+        //Toppings
+        ingredients[10] = "batteriesTop";
+        ingredients[11] = "eyeballsTop";
+        ingredients[12] = "gemsTop";
+        ingredients[13] = "glassTop";
+        ingredients[14] = "nettlesTop";
 
     }
 
     private void Update()
     {
-        //TEST
+        /*
         if (randomiserButton)
         {
             //Cone randomiser not needed currently
@@ -161,6 +193,27 @@ public class CustomerOrders : MonoBehaviour
         }
         selection = ingredients[5];
         Debug.Log(ingredients[2].ToString());
+    }
+
+    private int Randomiser(int x, int y)
+    {
+        int index = Random.Range(x, y);
+        return index;
+    }
+        
+}
+        */
+
+        //TEST
+
+
+        if (randomiserButton)
+        {
+            Ingredient = ingredients[Randomiser(1, 5)];
+        }
+        selection = Ingredient;
+        Debug.Log(selection.ToString());
+        Debug.Log("Randomiser: " + Randomiser(1, 9).ToString());
     }
 
     private int Randomiser(int x, int y)
