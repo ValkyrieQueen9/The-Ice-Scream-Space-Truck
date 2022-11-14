@@ -16,8 +16,13 @@ public class CustomerOrders_ : MonoBehaviour
     //Separate boss customer order later
     //Create simple successful order counter.
 
-    public bool currentOrder = false;
+    public GameObject shutterOpen;
+    public GameObject shutterClosed;
+    public GameObject shutter;
+    public float shutterSpeed = 5f;
+    public bool shutterTrigger = false;
 
+    public bool currentOrder = false;
     public string[] ingredients = new string[15];
 
     //Orders
@@ -186,10 +191,34 @@ public class CustomerOrders_ : MonoBehaviour
 
     private void Update()
     {
+        StartCoroutine(NewOrder());    
+        
+        StartCoroutine(NewOrderTransition());
+        
+    }
 
+    private int Randomiser(int x, int y)
+    {
+        int index = Random.Range(x, y);
+        return index;
+    }
+
+    private bool ShutterOpened()
+    {
+        return shutter.transform.position == shutterOpen.transform.position;
+    }
+
+    private bool ShutterClosed()
+    {
+        return shutter.transform.position == shutterClosed.transform.position;
+    }
+
+    IEnumerator NewOrder()
+    {
+        
         while (currentOrder == false)
         {
-
+            //shutter.transform.position = Vector2.MoveTowards(shutter.transform.position, shutterClosed.transform.position, shutterSpeed * Time.deltaTime);
             //Cone?
             orderCone = ingredients[0];
 
@@ -206,20 +235,175 @@ public class CustomerOrders_ : MonoBehaviour
             //Topping
             orderTopping = ingredients[Randomiser(10, 15)];
 
+            //shutter.transform.position = Vector2.MoveTowards(shutter.transform.position, shutterOpen.transform.position, shutterSpeed * Time.deltaTime);
+
+            yield return new WaitUntil(ShutterOpened);
+
             currentOrder = true;
             //Trigger false when an order is successfully submitted.
+
+
         }
 
-        if (orderIceCream1 == ingredients[1])
+        
+
+        //Many if statements to trigger ticket sprites - maybe move to Update() for order checking later?
+
+        //Bone Ice Cream
+        if (orderIceCream1 == ingredients[1]) //if the first scoop is bone ice cream change the order ticket sprite
         {
             ticketScoop1Rend.sprite = ticketBoneScoop;
         }
-      
+        if (orderIceCream2 == ingredients[1])
+        {
+            ticketScoop2Rend.sprite = ticketBoneScoop;
+        }
+        if (orderIceCream3 == ingredients[1])
+        {
+            ticketScoop3Rend.sprite = ticketBoneScoop;
+        }
+        if (orderIceCream4 == ingredients[1])
+        {
+            ticketScoop4Rend.sprite = ticketBoneScoop;
+        }
+        if (orderIceCream5 == ingredients[1])
+        {
+            ticketScoop5Rend.sprite = ticketBoneScoop;
+        }
+        //Cosmic Ice Cream
+        if (orderIceCream1 == ingredients[2])
+        {
+            ticketScoop1Rend.sprite = ticketCosmicScoop;
+        }
+        if (orderIceCream2 == ingredients[2])
+        {
+            ticketScoop2Rend.sprite = ticketCosmicScoop;
+        }
+        if (orderIceCream3 == ingredients[2])
+        {
+            ticketScoop3Rend.sprite = ticketCosmicScoop;
+        }
+        if (orderIceCream4 == ingredients[2])
+        {
+            ticketScoop4Rend.sprite = ticketCosmicScoop;
+        }
+        if (orderIceCream5 == ingredients[2])
+        {
+            ticketScoop5Rend.sprite = ticketCosmicScoop;
+        }
+        //Magma Ice Cream
+        if (orderIceCream1 == ingredients[3])
+        {
+            ticketScoop1Rend.sprite = ticketMagmaScoop;
+        }
+        if (orderIceCream2 == ingredients[3])
+        {
+            ticketScoop2Rend.sprite = ticketMagmaScoop;
+        }
+        if (orderIceCream3 == ingredients[3])
+        {
+            ticketScoop3Rend.sprite = ticketMagmaScoop;
+        }
+        if (orderIceCream4 == ingredients[3])
+        {
+            ticketScoop4Rend.sprite = ticketMagmaScoop;
+        }
+        if (orderIceCream5 == ingredients[3])
+        {
+            ticketScoop5Rend.sprite = ticketMagmaScoop;
+        }
+        //Meat Ice Cream
+        if (orderIceCream1 == ingredients[4])
+        {
+            ticketScoop1Rend.sprite = ticketMeatScoop;
+        }
+        if (orderIceCream2 == ingredients[4])
+        {
+            ticketScoop2Rend.sprite = ticketMeatScoop;
+        }
+        if (orderIceCream3 == ingredients[4])
+        {
+            ticketScoop3Rend.sprite = ticketMeatScoop;
+        }
+        if (orderIceCream4 == ingredients[4])
+        {
+            ticketScoop4Rend.sprite = ticketMeatScoop;
+        }
+        if (orderIceCream5 == ingredients[4])
+        {
+            ticketScoop5Rend.sprite = ticketMeatScoop;
+        }
+        //Tropical Ice Cream
+        if (orderIceCream1 == ingredients[5])
+        {
+            ticketScoop1Rend.sprite = ticketTropicalScoop;
+        }
+        if (orderIceCream2 == ingredients[5])
+        {
+            ticketScoop2Rend.sprite = ticketTropicalScoop;
+        }
+        if (orderIceCream3 == ingredients[5])
+        {
+            ticketScoop3Rend.sprite = ticketTropicalScoop;
+        }
+        if (orderIceCream4 == ingredients[5])
+        {
+            ticketScoop4Rend.sprite = ticketTropicalScoop;
+        }
+        if (orderIceCream5 == ingredients[5])
+        {
+            ticketScoop5Rend.sprite = ticketTropicalScoop;
+        }
+        //Sauces
+        if (orderSauce == ingredients[6])
+        {
+            ticketSauceRend.sprite = ticketAcidSauce;
+        }
+        if (orderSauce == ingredients[7])
+        {
+            ticketSauceRend.sprite = ticketBloodySauce;
+        }
+        if (orderSauce == ingredients[8])
+        {
+            ticketSauceRend.sprite = ticketBloodyUnicornSauce;
+        }
+        if (orderSauce == ingredients[9])
+        {
+            ticketSauceRend.sprite = ticketSoulSauce;
+        }
+        //Toppings
+        if (orderTopping == ingredients[10])
+        {
+            ticketToppingRend.sprite = ticketBatteriesTop;
+        }
+        if (orderTopping == ingredients[11])
+        {
+            ticketToppingRend.sprite = ticketEyeballsTop;
+        }
+        if (orderTopping == ingredients[12])
+        {
+            ticketToppingRend.sprite = ticketGemsTop;
+        }
+        if (orderTopping == ingredients[13])
+        {
+            ticketToppingRend.sprite = ticketGlassTop;
+        }
+        if (orderTopping == ingredients[14])
+        {
+            ticketToppingRend.sprite = ticketNettlesTop;
+        }
     }
 
-    private int Randomiser(int x, int y)
+    
+    IEnumerator NewOrderTransition ()
     {
-        int index = Random.Range(x, y);
-        return index;
-    }
+        shutter.transform.position = Vector2.MoveTowards(shutter.transform.position, shutterClosed.transform.position, shutterSpeed * Time.deltaTime);
+        yield return new WaitUntil(ShutterClosed);
+        
+        shutter.transform.position = Vector2.MoveTowards(shutter.transform.position, shutterOpen.transform.position, shutterSpeed * Time.deltaTime);
+        yield return new WaitUntil(ShutterOpened);
+        Debug.Log("ShutterOpen");
+    } 
+   
+
 }
