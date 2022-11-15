@@ -63,6 +63,9 @@ TagManager:
   - name: Toppings
     uniqueID: 2829179007
     locked: 0
+  - name: OrderTicket
+    uniqueID: 210139363
+    locked: 0
   - name: ErrorMsgsUI
     uniqueID: 1272182209
     locked: 0
