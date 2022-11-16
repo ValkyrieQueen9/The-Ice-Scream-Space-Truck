@@ -312,7 +312,7 @@ public class UseIngredient : MonoBehaviour
                 {
                     sauce1Rend.sprite = bloodyUnicornSauce;
                 }
-                if (soulSauce)
+                if (soul)
                 {
                     sauce1Rend.sprite = soulSauce;
                 }
@@ -333,7 +333,7 @@ public class UseIngredient : MonoBehaviour
                 {
                     sauce2Rend.sprite = bloodyUnicornSauce;
                 }
-                if (soulSauce)
+                if (soul)
                 {
                     sauce2Rend.sprite = soulSauce;
                 }
@@ -354,7 +354,7 @@ public class UseIngredient : MonoBehaviour
                 {
                     sauce3Rend.sprite = bloodyUnicornSauce;
                 }
-                if (soulSauce)
+                if (soul)
                 {
                     sauce3Rend.sprite = soulSauce;
                 }
@@ -375,7 +375,7 @@ public class UseIngredient : MonoBehaviour
                 {
                     sauce4Rend.sprite = bloodyUnicornSauce;
                 }
-                if (soulSauce)
+                if (soul)
                 {
                     sauce4Rend.sprite = soulSauce;
                 }
@@ -396,7 +396,7 @@ public class UseIngredient : MonoBehaviour
                 {
                     sauce5Rend.sprite = bloodyUnicornSauce;
                 }
-                if (soulSauce)
+                if (soul)
                 {
                     sauce5Rend.sprite = soulSauce;
                 }
