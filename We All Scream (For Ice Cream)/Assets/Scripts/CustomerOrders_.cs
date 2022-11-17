@@ -24,14 +24,16 @@ public class CustomerOrders_ : MonoBehaviour
     //----Create lists of each ingredient type and customers for each level
     //---Create randomiser function and output to inspector
     //---Output order to order ticket
-    //Create function to check submitted ice cream against randomised result
+    //---Create function to check submitted ice cream against randomised result
     //Separate boss customer order later
     //Create simple successful order counter.
 
     public GameObject beginGameButton;
+    public GameObject submitButton;
     public orderEnum orderEnum;
-    public bool beginGame = false;
-    public bool orderSubmit = false;
+    public int orderCount = 0;
+    public int orderFailCount = 0;
+    public int orderSuccessCount = 0;
 
     [Header("Shutter Options")]
     public GameObject shutterOpen;
@@ -50,8 +52,12 @@ public class CustomerOrders_ : MonoBehaviour
     public string orderSauce;
     public string orderTopping;
 
+    //Game
+    private bool beginGame = false;
+
     //Submission Checklist
-    private bool coneResult, scoop1Result, scoop2Result, scoop3Result, scoop4Result, scoop5Result, sauceResult, toppingResult = false;
+    private bool coneResult, scoop1Result, scoop2Result, scoop3Result, scoop4Result, scoop5Result, sauceResult, toppingResult, submitResult = false;
+    private bool orderSubmit = false;
 
     //Ingredients Array
     private string[] ingredients = new string[15];
@@ -92,6 +98,7 @@ public class CustomerOrders_ : MonoBehaviour
     private void Start()
     {
         //For each level there are different flavours being used. Use: if(scene level 1? or state level 1?) then define scoops 1-2 only 
+        submitButton.SetActive(false);
 
         //Level Manager
         levelManagerObj = GameObject.Find("Level Manager");
@@ -121,7 +128,6 @@ public class CustomerOrders_ : MonoBehaviour
         nettlesTop = Resources.Load<Sprite>("toppings/nettlesTopping");
 
         //Ticket Ingredient Sprites
-        
         ticketPlainCone = Resources.Load<Sprite>("cones/plainCone");
 
         ticketBoneScoop = Resources.Load<Sprite>("scoops/ticketBoneScoop");
@@ -130,16 +136,16 @@ public class CustomerOrders_ : MonoBehaviour
         ticketMeatScoop = Resources.Load<Sprite>("scoops/ticketMeatScoop");
         ticketTropicalScoop = Resources.Load<Sprite>("scoops/ticketTropicalScoop");
 
-        ticketAcidSauce = Resources.Load<Sprite>("sauces/acidSauce");
-        ticketBloodySauce = Resources.Load<Sprite>("sauces/bloodySauce");
-        ticketBloodyUnicornSauce = Resources.Load<Sprite>("sauces/bloodyUnicornSauce");
-        ticketSoulSauce = Resources.Load<Sprite>("sauces/soulSauce");
+        ticketAcidSauce = Resources.Load<Sprite>("sauces/ticketAcidSauce");
+        ticketBloodySauce = Resources.Load<Sprite>("sauces/ticketBloodySauce");
+        ticketBloodyUnicornSauce = Resources.Load<Sprite>("sauces/ticketBloodyUnicornSauce");
+        ticketSoulSauce = Resources.Load<Sprite>("sauces/ticketSoulSauce");
 
-        ticketBatteriesTop = Resources.Load<Sprite>("toppings/batteriesTopping");
-        ticketEyeballsTop = Resources.Load<Sprite>("toppings/eyeballsTopping");
-        ticketGemsTop = Resources.Load<Sprite>("toppings/gemsTopping");
-        ticketGlassTop = Resources.Load<Sprite>("toppings/glassTopping");
-        ticketNettlesTop = Resources.Load<Sprite>("toppings/nettlesTopping");
+        ticketBatteriesTop = Resources.Load<Sprite>("toppings/ticketBatteriesTopping");
+        ticketEyeballsTop = Resources.Load<Sprite>("toppings/ticketEyeballsTopping");
+        ticketGemsTop = Resources.Load<Sprite>("toppings/ticketGemsTopping");
+        ticketGlassTop = Resources.Load<Sprite>("toppings/ticketGlassTopping");
+        ticketNettlesTop = Resources.Load<Sprite>("toppings/ticketNettlesTopping");
 
         //Cone Renderer
         buildCone = GameObject.FindGameObjectWithTag("Cone");
@@ -240,6 +246,7 @@ public class CustomerOrders_ : MonoBehaviour
             case orderEnum.STATE_CLOSED: //STATE_CLOSED
                 Debug.Log("Shutter is Closed");
                 EmptyOrderTicket();
+                ClearOrder();
                 orderSubmit = false;
                 //Change customer sprite in script
                 if (beginGame)
@@ -280,12 +287,21 @@ public class CustomerOrders_ : MonoBehaviour
             case orderEnum.STATE_OPENED: 
                 Debug.Log("Shutter Opened");
                 ChangeOrderTicket();
+                submitButton.SetActive(true);
                 if (orderSubmit)
                 {
-                    //Coroutine needed with Customer dialogue (success/fail) and icons (simple icons pop up around customer?)
-                    orderEnum = orderEnum.STATE_CLOSING;
+                    if (submitResult)
+                    {
+                        //Success customer dialogue and icons here
+                        orderEnum = orderEnum.STATE_CLOSING;
+                    }
+                    else
+                    {
+                        //Fail customer dialogue and icons here
+                        Debug.Log("Click restart to try again!");
+                    }
+                    
                 }
-
                 //Could Create a state for creating IceCreams?? Could control customer dialogues here?
 
                 break;
@@ -293,6 +309,7 @@ public class CustomerOrders_ : MonoBehaviour
                 //STATE_CLOSING
             case orderEnum.STATE_CLOSING:
                 Debug.Log("Shutter Closing");
+                submitButton.SetActive(false);
                 shutter.transform.position = Vector2.MoveTowards(shutter.transform.position, shutterClosed.transform.position, shutterSpeed * Time.deltaTime);
                 if (ShutterClosed())
                 {
@@ -304,12 +321,6 @@ public class CustomerOrders_ : MonoBehaviour
             default:
                 break;
         }
-
-        if(orderSubmit)
-        {
-            CheckOrder();
-            Debug.Log("Order Submitted");
-        }
     }        
 
     public void BeginGame()
@@ -319,7 +330,20 @@ public class CustomerOrders_ : MonoBehaviour
 
     public void OrderSubmit()
     {
+        Debug.Log("Order Submitted");
+        CheckOrder();
         orderSubmit = true;
+    }
+
+    public void ClearOrder()
+    {
+        buildConeRend.sprite =null;
+        scoop1Rend.sprite = null; scoop2Rend.sprite = null; scoop3Rend.sprite = null; scoop4Rend.sprite = null; scoop5Rend.sprite = null;
+        sauce1Rend.sprite = null; sauce2Rend.sprite = null; sauce3Rend.sprite = null; sauce4Rend.sprite = null; sauce5Rend.sprite = null;
+        topping1Rend.sprite = null; topping2Rend.sprite = null; topping3Rend.sprite = null; topping4Rend.sprite = null; topping5Rend.sprite = null;
+
+        coneResult = false; scoop1Result = false; scoop2Result = false; scoop3Result = false; scoop4Result = false; scoop5Result = false; sauceResult = false; toppingResult = false; submitResult = false;
+        Debug.Log("Results cleared");
     }
 
     private int Randomiser(int x, int y)
@@ -340,6 +364,7 @@ public class CustomerOrders_ : MonoBehaviour
 
     private void ChangeOrderTicket()
     {
+
         //Cone
         if(orderCone == ingredients[0])
         {
@@ -502,71 +527,246 @@ public class CustomerOrders_ : MonoBehaviour
         ticketToppingRend.sprite = null;
     }
 
-    private void CheckOrder() // To continue: Test it to make correct/wrong results on debug Logs right and then continue for each level
+    private void CheckOrder()
     {
-        if(levelManager.LevelsEnum == LevelsEnum.STATE_LEVEL1) //If game is on Level 1 only check cone, scoop1, sauce and topping
+        //LEVEL 1 CHECKS - 2 Scoops 
+        if (levelManager.LevelsEnum == LevelsEnum.STATE_LEVEL1) //If game is on Level 1 only check cone, scoop1, sauce and topping
         {
             Debug.Log("Checking Orders for Level 1....");
 
             if (string.Compare(orderCone, buildConeRend.sprite.name) == 0)
             {
                 coneResult = true;
-                Debug.Log("Cone is correct!");
-            }
-            if (string.Compare(orderIceCream1, scoop1Rend.sprite.name) == 0)
-            {
-                scoop1Result = true;
-                Debug.Log("Scoop 1 is correct!");
-            }
-            if (string.Compare(orderSauce, sauce1Rend.sprite.name) == 0)
-            {
-                sauceResult = true;
-                Debug.Log("Sauce 1 is correct!");
+                Debug.Log("Cone is correct");
             }
             else
             {
-                Debug.Log("Sauce 1 is wrong!");
+                Debug.Log("Cone is wrong");
             }
-            if (string.Compare(orderTopping, topping1Rend.sprite.name) == 0)
+
+            if (string.Compare(orderIceCream1, scoop1Rend.sprite.name) == 0)
+            {
+                scoop1Result = true;
+                Debug.Log("Scoop 1 is correct");
+            }
+            else
+            {
+                Debug.Log("Scoop 1 is wrong");
+            }
+
+            if (string.Compare(orderIceCream2, scoop2Rend.sprite.name) == 0)
+            {
+                scoop2Result = true;
+                Debug.Log("Scoop 2 is correct!");
+            }
+            else
+            {
+                Debug.Log("Scoop 2 is wrong");
+            }
+
+            if (string.Compare(orderSauce, sauce2Rend.sprite.name) == 0)
+            {
+                sauceResult = true;
+                Debug.Log("Sauce 2 is correct");
+            }
+            else
+            {
+                Debug.Log("Sauce 2 is wrong");
+            }
+
+            if (string.Compare(orderTopping, topping2Rend.sprite.name) == 0)
             {
                 toppingResult = true;
-                Debug.Log("Topping 1 is correct!");
+                Debug.Log("Topping 2 is correct");
+            }
+            else
+            {
+                Debug.Log("Topping 2 is wrong");
+            }
+
+            if (coneResult && scoop1Result && scoop2Result && sauceResult && toppingResult == true)
+            {
+                submitResult = true;
+                Debug.Log("SUCCESS");
+            }
+            else
+            {
+                Debug.Log("FAIL");
             }
         }
-        /*
-        if (string.Compare(orderIceCream2, scoop2Rend.sprite.name) == 0)
+
+        //LEVEL 2 CHECKS - 3 Scoops
+        if (levelManager.LevelsEnum == LevelsEnum.STATE_LEVEL2)
         {
-            scoop2Result = true;
-            Debug.Log("Scoop 2 is correct!");
+            Debug.Log("Checking Orders for Level 2....");
+
+            if (string.Compare(orderCone, buildConeRend.sprite.name) == 0)
+            {
+                coneResult = true;
+                Debug.Log("Cone is correct");
+            }
+            else
+            {
+                Debug.Log("Cone is wrong");
+            }
+
+            if (string.Compare(orderIceCream1, scoop1Rend.sprite.name) == 0)
+            {
+                scoop1Result = true;
+                Debug.Log("Scoop 1 is correct");
+            }
+            else
+            {
+                Debug.Log("Scoop 1 is wrong");
+            }
+
+            if (string.Compare(orderIceCream2, scoop2Rend.sprite.name) == 0)
+            {
+                scoop2Result = true;
+                Debug.Log("Scoop 2 is correct!");
+            }
+            else
+            {
+                Debug.Log("Scoop 2 is wrong");
+            }
+
+            if (string.Compare(orderIceCream3, scoop3Rend.sprite.name) == 0)
+            {
+                scoop3Result = true;
+                Debug.Log("Scoop 3 is correct!");
+            }
+            else
+            {
+                Debug.Log("Scoop 3 is wrong");
+            }
+
+            if (string.Compare(orderSauce, sauce3Rend.sprite.name) == 0)
+            {
+                sauceResult = true;
+                Debug.Log("Sauce 3 is correct");
+            }
+            else
+            {
+                Debug.Log("Sauce 3 is wrong");
+            }
+
+            if (string.Compare(orderTopping, topping3Rend.sprite.name) == 0)
+            {
+                toppingResult = true;
+                Debug.Log("Topping 3 is correct");
+            }
+            else
+            {
+                Debug.Log("Topping 3 is wrong");
+            }
+
+            if (coneResult && scoop1Result && scoop2Result && scoop3Result && sauceResult && toppingResult == true)
+            {
+                submitResult = true;
+                Debug.Log("SUCCESS");
+            }
+            else
+            {
+                Debug.Log("FAIL");
+            }
         }
-        */
-/*
-        if (string.Compare(orderIceCream3, scoop3Rend.sprite.name) == 0)
+
+        //LEVEL 3 CHECKS - 5 Scoops
+        if (levelManager.LevelsEnum == LevelsEnum.STATE_LEVEL3)
         {
-            scoop3Result = true;
-            Debug.Log("Scoop 3 is correct!");
+            Debug.Log("Checking Orders for Level 3....");
+
+            if (string.Compare(orderCone, buildConeRend.sprite.name) == 0)
+            {
+                coneResult = true;
+                Debug.Log("Cone is correct");
+            }
+            else
+            {
+                Debug.Log("Cone is wrong");
+            }
+
+            if (string.Compare(orderIceCream1, scoop1Rend.sprite.name) == 0)
+            {
+                scoop1Result = true;
+                Debug.Log("Scoop 1 is correct");
+            }
+            else
+            {
+                Debug.Log("Scoop 1 is wrong");
+            }
+
+            if (string.Compare(orderIceCream2, scoop2Rend.sprite.name) == 0)
+            {
+                scoop2Result = true;
+                Debug.Log("Scoop 2 is correct!");
+            }
+            else
+            {
+                Debug.Log("Scoop 2 is wrong");
+            }
+
+            if (string.Compare(orderIceCream3, scoop3Rend.sprite.name) == 0)
+            {
+                scoop3Result = true;
+                Debug.Log("Scoop 3 is correct!");
+            }
+            else
+            {
+                Debug.Log("Scoop 3 is wrong");
+            }
+
+            if (string.Compare(orderIceCream4, scoop4Rend.sprite.name) == 0)
+            {
+                scoop4Result = true;
+                Debug.Log("Scoop 4 is correct!");
+            }
+            else
+            {
+                Debug.Log("Scoop 4 is wrong");
+            }
+
+            if (string.Compare(orderIceCream5, scoop5Rend.sprite.name) == 0)
+            {
+                scoop5Result = true;
+                Debug.Log("Scoop 5 is correct!");
+            }
+            else
+            {
+                Debug.Log("Scoop 5 is wrong");
+            }
+
+            if (string.Compare(orderSauce, sauce5Rend.sprite.name) == 0)
+            {
+                sauceResult = true;
+                Debug.Log("Sauce 5 is correct");
+            }
+            else
+            {
+                Debug.Log("Sauce 5 is wrong");
+            }
+
+            if (string.Compare(orderTopping, topping5Rend.sprite.name) == 0)
+            {
+                toppingResult = true;
+                Debug.Log("Topping 5 is correct");
+            }
+            else
+            {
+                Debug.Log("Topping 5 is wrong");
+            }
+
+            if (coneResult && scoop1Result && scoop2Result && scoop3Result && scoop4Result && scoop5Result && sauceResult && toppingResult == true)
+            {
+                submitResult = true;
+                Debug.Log("SUCCESS");
+            }
+            else
+            {
+                Debug.Log("FAIL");
+            }
         }
-        if (string.Compare(orderIceCream4, scoop4Rend.sprite.name) == 0)
-        {
-            scoop4Result = true;
-            Debug.Log("Scoop 4 is correct!");
-        }
-        if (string.Compare(orderIceCream5, scoop5Rend.sprite.name) == 0)
-        {
-            scoop5Result = true;
-            Debug.Log("Scoop 5 is correct!");
-        }
-        if (string.Compare(orderSauce, sauce1Rend.sprite.name) == 0)
-        {
-            scoop5Result = true;
-            Debug.Log("Scoop 5 is correct!");
-        }
-        if (string.Compare(orderTopping, topping1Rend.sprite.name) == 0)
-        {
-            scoop5Result = true;
-            Debug.Log("Scoop 5 is correct!");
-        }
-        */
+
     }
     
     IEnumerator ShutterWait(float waitFor)
