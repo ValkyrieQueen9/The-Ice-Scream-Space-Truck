@@ -253,7 +253,14 @@ public class CustomerOrders_ : MonoBehaviour
                 Debug.Log("Game has not started");
                 beginGameButton.SetActive(true);
                 orderNumber.text = ("0");
-                customerSpaceRend.sprite = null;
+                if(levelManager.LevelsEnum == LevelsEnum.STATE_LEVEL1)
+                {
+                customerSpaceRend.sprite = fireBoiNormal;
+                }
+                if (levelManager.LevelsEnum == LevelsEnum.STATE_LEVEL2)
+                {
+                    customerSpaceRend.sprite = funGuyNormal;
+                }
                 EmptyOrderTicket();
                 shutter.transform.position = shutterClosed.transform.position;
                 if (beginGame)
@@ -270,21 +277,21 @@ public class CustomerOrders_ : MonoBehaviour
                 EmptyOrderTicket();
                 ClearOrder();
                 orderSubmit = false;
-                ChangeCustomer();
+                
                 if (beginGame)
                    {
                       orderEnum = orderEnum.STATE_OPENING;
                    }
                    else
                    {
-                       StartCoroutine(ShutterWait(shutterWaitTime));
+                      StartCoroutine(Wait(orderEnum.STATE_OPENING, shutterWaitTime));
                    }
 
                 break;
 
                 //STATE_OPENING
             case orderEnum.STATE_OPENING:
-                Debug.Log("Shutter Opening");
+                Debug.Log("Shutter Opening");                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
                 beginGame = false;
                 shutter.transform.position = Vector2.MoveTowards(shutter.transform.position, shutterOpen.transform.position, shutterSpeed * Time.deltaTime);
 
@@ -316,17 +323,16 @@ public class CustomerOrders_ : MonoBehaviour
                     {
                         Count();
                         orderNumber.text = (orderCount.ToString()); //Remember to clear this when day/level ends - add number to final game orders for later.
-                        //Success customer dialogue and icons here
-                        orderEnum = orderEnum.STATE_CLOSING;
+                        ChangeEmotionHappy();
+                        StartCoroutine(Wait(orderEnum.STATE_CLOSING, shutterWaitTime));
                     }
                     else
                     {
-                        //Fail customer dialogue and icons here
+                        ChangeEmotionAngry();
                         Debug.Log("Click restart to try again!");
                     }
                     
                 }
-                //Could Create a state for creating IceCreams?? Could control customer dialogues here?
 
                 break;
 
@@ -338,6 +344,7 @@ public class CustomerOrders_ : MonoBehaviour
                 shutter.transform.position = Vector2.MoveTowards(shutter.transform.position, shutterClosed.transform.position, shutterSpeed * Time.deltaTime);
                 if (ShutterClosed())
                 {
+                    ChangeCustomer();
                     orderEnum = orderEnum.STATE_CLOSED;
                 }
 
@@ -398,20 +405,18 @@ public class CustomerOrders_ : MonoBehaviour
         return shutter.transform.position == shutterClosed.transform.position;
     }
 
-    private void ChangeCustomer()
+    private void ChangeCustomer() 
     {
+        //Unsure how this will work with more customers
         Debug.Log("Changing Customer...");
         if (levelManager.LevelsEnum == LevelsEnum.STATE_LEVEL1)
         {
-            if(customerSpaceRend.sprite == null)
-            {
-                customerSpaceRend.sprite = fireBoiNormal;
-            }
-            else if (customerSpaceRend.sprite == fireBoiNormal || fireBoiHappy || fireBoiAngry)
+
+            if (customerSpaceRend.sprite == fireBoiNormal || customerSpaceRend.sprite == fireBoiHappy || customerSpaceRend.sprite == fireBoiAngry)
             {
                 customerSpaceRend.sprite = demonNormal;
             }
-            else if (customerSpaceRend.sprite == demonNormal || demonHappy || demonAngry)
+            else if (customerSpaceRend.sprite == demonNormal || customerSpaceRend.sprite == demonHappy || customerSpaceRend.sprite == demonAngry)
             {
                 customerSpaceRend.sprite = fireBoiNormal;
             }
@@ -419,31 +424,61 @@ public class CustomerOrders_ : MonoBehaviour
 
         if (levelManager.LevelsEnum == LevelsEnum.STATE_LEVEL2)
         {
-            if (customerSpaceRend.sprite == null)
-            {
-                customerSpaceRend.sprite = witchNormal;
-            }
-            else if (customerSpaceRend.sprite == witchNormal || witchHappy || witchAngry)
+            if (customerSpaceRend.sprite == witchNormal || customerSpaceRend.sprite == witchHappy || customerSpaceRend.sprite == witchAngry)
             {
                 customerSpaceRend.sprite = funGuyNormal;
             }
-            else if (customerSpaceRend.sprite == funGuyNormal || funGuyHappy || funGuyAngry)
+            else if (customerSpaceRend.sprite == funGuyNormal || customerSpaceRend.sprite == funGuyHappy || customerSpaceRend.sprite == funGuyAngry)
             {
                 customerSpaceRend.sprite = witchNormal;
             }
         }
     }
 
-    private void ChangeEmotion()
+    private void ChangeEmotionHappy()
     {
-        //New method for emotion change
-        //In Start:
-        //normalFireBoi = SpriteRef
-        //happyFireBoi = spriteRef
-        //In state update:
-        //if successful order = CustomerSpaceRend = EmotionChange(happyFireBoi)
-        //void EmotionChange(sprite charEmotion)
-        //CustomerSpaceRend = charEmotion
+        if (customerSpaceRend.sprite == demonNormal || customerSpaceRend.sprite == demonAngry)
+        {
+            customerSpaceRend.sprite = demonHappy;
+        }
+
+        else if(customerSpaceRend.sprite == fireBoiNormal || customerSpaceRend.sprite == fireBoiAngry)
+        {
+            customerSpaceRend.sprite = fireBoiHappy;
+        }
+
+        else if (customerSpaceRend.sprite == funGuyNormal || customerSpaceRend.sprite == funGuyAngry)
+        {
+            customerSpaceRend.sprite = funGuyHappy;
+        }
+
+        else if (customerSpaceRend.sprite == witchNormal || customerSpaceRend.sprite == witchAngry)
+        {
+            customerSpaceRend.sprite = witchHappy;
+        }
+    }
+
+    private void ChangeEmotionAngry()
+    {
+        if (customerSpaceRend.sprite == demonNormal || customerSpaceRend.sprite == demonHappy)
+        {
+            customerSpaceRend.sprite = demonAngry;
+        }
+
+        else if (customerSpaceRend.sprite == fireBoiNormal || customerSpaceRend.sprite == fireBoiHappy)
+        {
+            customerSpaceRend.sprite = fireBoiAngry;
+        }
+
+        else if (customerSpaceRend.sprite == funGuyNormal || customerSpaceRend.sprite == funGuyHappy)
+        {
+            customerSpaceRend.sprite = funGuyAngry;
+        }
+
+        else if (customerSpaceRend.sprite == witchNormal || customerSpaceRend.sprite == witchHappy)
+        {
+            customerSpaceRend.sprite = witchAngry;
+        }
     }
 
     private void ChangeOrderTicket()
@@ -983,13 +1018,13 @@ public class CustomerOrders_ : MonoBehaviour
             }
         }
     }
-    
-    IEnumerator ShutterWait(float waitFor)
+
+    IEnumerator Wait (orderEnum state, float waitFor)
     {
         Debug.Log("Waiting...");
         yield return new WaitForSeconds(waitFor);
-        orderEnum = orderEnum.STATE_OPENING;
-    } 
+        orderEnum = state;
+    }
    
 
 }
