@@ -20,15 +20,6 @@ public class CustomerOrders_ : MonoBehaviour
     //Script Purpose: Randomise customer orders and output selection to inspector and order ticket. 
     //Randomise Customer at the window and trigger shutter movement. When Ice Cream is submitted check it against the randomised.
 
-    //----Add all ingredient Sprites - copy from use ingredients
-    //----New ingredient sprites needed for orders
-    //----Create lists of each ingredient type and customers for each level
-    //---Create randomiser function and output to inspector
-    //---Output order to order ticket
-    //---Create function to check submitted ice cream against randomised result
-    //Separate boss customer order later
-    //Create simple successful order counter.
-
     public GameObject beginGameButton;
     public GameObject submitButton;
     public orderEnum orderEnum;
@@ -55,6 +46,11 @@ public class CustomerOrders_ : MonoBehaviour
     private bool beginGame = false;
     private int counterRunOnce = 0;
     private bool ignoreThis = true;
+
+    //Customer Sprites
+    private GameObject customerSpaceObj;
+    private SpriteRenderer customerSpaceRend;
+    private Sprite demonNormal, demonHappy, demonAngry, fireBoiNormal, fireBoiHappy, fireBoiAngry, funGuyNormal, funGuyHappy, funGuyAngry, witchNormal, witchHappy, witchAngry;
 
     //Submission Checklist
     private bool coneResult, scoop1Result, scoop2Result, scoop3Result, scoop4Result, scoop5Result, sauceResult, toppingResult, submitResult = false;
@@ -102,6 +98,22 @@ public class CustomerOrders_ : MonoBehaviour
     {
         //For each level there are different flavours being used. Use: if(scene level 1? or state level 1?) then define scoops 1-2 only 
         submitButton.SetActive(false);
+
+        //Customer Sprites
+        customerSpaceObj = GameObject.Find("CustomerSpace");
+        customerSpaceRend = customerSpaceObj.GetComponent<SpriteRenderer>();
+        fireBoiNormal = Resources.Load<Sprite>("customers/fireBoi0");
+        fireBoiHappy = Resources.Load<Sprite>("customers/fireBoi1");
+        fireBoiAngry = Resources.Load<Sprite>("customers/fireBoi2");
+        demonNormal = Resources.Load<Sprite>("customers/demon0");
+        demonHappy = Resources.Load<Sprite>("customers/demon1");
+        demonAngry = Resources.Load<Sprite>("customers/demon2");
+        funGuyNormal = Resources.Load<Sprite>("customers/funGuy0");
+        funGuyHappy = Resources.Load<Sprite>("customers/funGuy1");
+        funGuyAngry = Resources.Load<Sprite>("customers/funGuy2");
+        witchNormal = Resources.Load<Sprite>("customers/witch0");
+        witchHappy = Resources.Load<Sprite>("customers/witch1");
+        witchAngry = Resources.Load<Sprite>("customers/witch2");
 
         //Level Manager
         levelManagerObj = GameObject.Find("Level Manager");
@@ -241,6 +253,7 @@ public class CustomerOrders_ : MonoBehaviour
                 Debug.Log("Game has not started");
                 beginGameButton.SetActive(true);
                 orderNumber.text = ("0");
+                customerSpaceRend.sprite = null;
                 EmptyOrderTicket();
                 shutter.transform.position = shutterClosed.transform.position;
                 if (beginGame)
@@ -257,7 +270,7 @@ public class CustomerOrders_ : MonoBehaviour
                 EmptyOrderTicket();
                 ClearOrder();
                 orderSubmit = false;
-                //Change customer sprite in script
+                ChangeCustomer();
                 if (beginGame)
                    {
                       orderEnum = orderEnum.STATE_OPENING;
@@ -383,6 +396,54 @@ public class CustomerOrders_ : MonoBehaviour
     private bool ShutterClosed()
     {
         return shutter.transform.position == shutterClosed.transform.position;
+    }
+
+    private void ChangeCustomer()
+    {
+        Debug.Log("Changing Customer...");
+        if (levelManager.LevelsEnum == LevelsEnum.STATE_LEVEL1)
+        {
+            if(customerSpaceRend.sprite == null)
+            {
+                customerSpaceRend.sprite = fireBoiNormal;
+            }
+            else if (customerSpaceRend.sprite == fireBoiNormal || fireBoiHappy || fireBoiAngry)
+            {
+                customerSpaceRend.sprite = demonNormal;
+            }
+            else if (customerSpaceRend.sprite == demonNormal || demonHappy || demonAngry)
+            {
+                customerSpaceRend.sprite = fireBoiNormal;
+            }
+        }
+
+        if (levelManager.LevelsEnum == LevelsEnum.STATE_LEVEL2)
+        {
+            if (customerSpaceRend.sprite == null)
+            {
+                customerSpaceRend.sprite = witchNormal;
+            }
+            else if (customerSpaceRend.sprite == witchNormal || witchHappy || witchAngry)
+            {
+                customerSpaceRend.sprite = funGuyNormal;
+            }
+            else if (customerSpaceRend.sprite == funGuyNormal || funGuyHappy || funGuyAngry)
+            {
+                customerSpaceRend.sprite = witchNormal;
+            }
+        }
+    }
+
+    private void ChangeEmotion()
+    {
+        //New method for emotion change
+        //In Start:
+        //normalFireBoi = SpriteRef
+        //happyFireBoi = spriteRef
+        //In state update:
+        //if successful order = CustomerSpaceRend = EmotionChange(happyFireBoi)
+        //void EmotionChange(sprite charEmotion)
+        //CustomerSpaceRend = charEmotion
     }
 
     private void ChangeOrderTicket()
