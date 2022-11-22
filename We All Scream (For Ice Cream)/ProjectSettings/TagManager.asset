@@ -72,3 +72,6 @@ TagManager:
   - name: CustomerDiagloueUI
     uniqueID: 3928417587
     locked: 0
+  - name: Menu
+    uniqueID: 3732653807
+    locked: 0
