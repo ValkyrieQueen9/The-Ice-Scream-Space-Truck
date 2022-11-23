@@ -19,8 +19,8 @@ using TMPro;
 public enum LevelsEnum
 {
     STATE_MENU, //Main Menu image and buttons including sound bar
-    STATE_FADE, //Fade to black transition - MAKE FADE A SIMPLE COROUTINE?
     STATE_TUTORIAL, //Blue swipe across with images and arrows/next/continue buttons
+    STATE_FADE,
     STATE_START, //Beginning state of gameplay, Begin button on shutter maybe or not needed? Can be used for countdown too
     STATE_LEVEL1, //Level 1 gameplay, changed when time is up
     STATE_LEVEL2, //Level 2 gameplay- changed when time is up
@@ -34,56 +34,126 @@ public class LevelManager : MonoBehaviour
 {
     public LevelsEnum LevelsEnum;
     public TextMeshProUGUI levelNumber;
-    public int levelTracker = 0; //0 is menu, 1 is tutorial, 2 is level 1, 3 is level 2, 4 is end
-
+    public int levelTracker = 0; //0 is menu, 1 is tutorial, 2 is level 1, 3 is level 2, 4 is score, 5 is end
+    public int test = 0;
+    public int fadeRunOnce = 0;
+    public bool gameplayActive = false;
     public GameObject mainMenu;
-    public GameObject customerOrdersObj;
-    private CustomerOrders_ customerOrders;
-    //int to keep track of level even when using fades and pauses.
+    public Transitions transitions;
+    public GameObject submitButton;
+    public GameObject beginGameButton;
+    public GameObject ingredientButtons;
+    public CustomerOrders_ customerOrders;
+    public GameObject[] gameplayButtons;
 
 
     void Start()
     {
+        fadeRunOnce = 0;
         levelNumber.text = "0";
         LevelsEnum = LevelsEnum.STATE_MENU;
         mainMenu.SetActive(true);
-        customerOrders = customerOrdersObj.GetComponent<CustomerOrders_>();
+        gameplayButtons = GameObject.FindGameObjectsWithTag("Gameplay Buttons");
     }
 
 
     void Update()
-    {
+    {                
+        if(test == 2)
+                {
+                    LevelsEnum = LevelsEnum.STATE_FADE;
+                }
+        Debug.Log("Level tracker = " + levelTracker);
         switch (LevelsEnum)
         {
+            //Beginning State
             case LevelsEnum.STATE_MENU:
+                levelTracker = 0;
+                mainMenu.SetActive(true);
                 levelNumber.text = "M";
+                gameplayActive = false;
+
                 //Game is started from Buttons
-
-                //Create Sound bar
-                //Disable ingredient buttons - method to active and deactivate ingredients
-
-
+                //Create Sound bar - audio manager needed first
+               
                 break;
 
-            case LevelsEnum.STATE_FADE:
-                //Fade in dark screen 
-                //use if statements to move on
-                //if levelTracker == 0 then move to tutorial
-                //if "" == 2 move to level 1 - number change in tutorial or end of this script
-                // if "" == 3 move to level 2
-
-                break;
-
+            //Triggered from Start button using startGame() method 
             case LevelsEnum.STATE_TUTORIAL:
+                levelTracker = 1;
+                mainMenu.SetActive(false);
                 levelNumber.text = "T";
+
                 //Move in swipe panel with instructions
                 //show arrows for next back slides
                 //use methods for each page of instructions - showTut1() - deactivate current strip and activate correct
 
                 break;
 
+            case LevelsEnum.STATE_FADE:
+                //If statements might not work? Try make into method
+
+                if(fadeRunOnce == 0 )
+                {
+                    transitions.FadeOut();
+                    fadeRunOnce += 1;
+                }
+
+                if(transitions.fadeOutComplete) 
+                    {
+                    if (levelTracker == 0) //If on start menu, go to tutorial
+                        {
+                            LevelsEnum = LevelsEnum.STATE_TUTORIAL;
+                            transitions.fadeOutComplete = false;
+                            fadeRunOnce = 0;
+                            Debug.Log("State is now Tutorial");
+                        }
+                    if (levelTracker == 1) //If on tutorial, go to level 1
+                        {
+                            LevelsEnum = LevelsEnum.STATE_LEVEL1;
+                            transitions.fadeOutComplete = false;
+                            fadeRunOnce = 0;
+                        }
+                    if (levelTracker == 2) //If on level 1, go to level 2
+                        {
+                            LevelsEnum = LevelsEnum.STATE_LEVEL2;
+                            transitions.fadeOutComplete = false;
+                            fadeRunOnce = 0;
+                        }
+                    if (levelTracker == 3) //If on level 2, go to score
+                        {
+                            LevelsEnum = LevelsEnum.STATE_END;
+                            transitions.fadeOutComplete = false;
+                            fadeRunOnce = 0;
+                        }
+                    if (levelTracker == 4) //If on score, go to end
+                        {
+                            LevelsEnum = LevelsEnum.STATE_TUTORIAL;
+                            transitions.fadeOutComplete = false;
+                            fadeRunOnce = 0;
+                        }
+                    if (levelTracker == 5) //If on end, go to main menu
+                        {
+                            LevelsEnum = LevelsEnum.STATE_TUTORIAL;
+                            transitions.fadeOutComplete = false;
+                            fadeRunOnce = 0;
+                        }
+                    if (levelTracker >= 100) //If on any level, go to start (pause menu exit?)
+                        {
+                            LevelsEnum = LevelsEnum.STATE_MENU;
+                            transitions.fadeOutComplete = false;
+                            fadeRunOnce = 0;
+                        }
+                    transitions.FadeIn();
+                    //Debug.Log("Fade In triggered");
+                    }
+
+
+                break;
+
             case LevelsEnum.STATE_START:
                 levelNumber.text = "0";
+                gameplayActive = true; //need to put somewhere without loop
                 //Beginning state of gameplay, Begin button on shutter maybe or not needed? Can be used for countdown too
 
                 break;
@@ -126,8 +196,7 @@ public class LevelManager : MonoBehaviour
 
     public void StartGame()
     {
-        LevelsEnum = LevelsEnum.STATE_TUTORIAL;
-
+        LevelsEnum = LevelsEnum.STATE_FADE;
     }
 
     public void ExitGame()
@@ -136,18 +205,37 @@ public class LevelManager : MonoBehaviour
         Application.Quit();
     }
 
-    IEnumerator shutterTransition()
-    {
-
-    }
-
     public void DisableGameButtons()
     {
-
+        //stops ingredient buttons from being used on main menu
+        foreach(GameObject gameplayButton in gameplayButtons)
+            {
+            gameplayButton.SetActive(false);
+            Debug.Log("All buttons are disabled");
+            }
     }
 
     public void EnableGameButtons()
     {
+        //renables buttons for gameplay
+        foreach (GameObject gameplayButton in gameplayButtons)
+        {
+            gameplayButton.SetActive(true);
+            Debug.Log("Most buttons are enabled!");
+        }
+    }
 
+    public void Pause()
+    {
+        gameplayActive = false;
+        DisableGameButtons();
+        Debug.Log("Game test paused");
+    }
+
+    public void Play()
+    {
+        gameplayActive = true;
+        EnableGameButtons();
+        Debug.Log("Game test UNpaused");
     }
 }

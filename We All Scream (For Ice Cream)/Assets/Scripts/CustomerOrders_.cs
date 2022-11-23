@@ -98,6 +98,7 @@ public class CustomerOrders_ : MonoBehaviour
     {
         //For each level there are different flavours being used. Use: if(scene level 1? or state level 1?) then define scoops 1-2 only 
         submitButton.SetActive(false);
+        beginGameButton.SetActive(false);
 
         //Customer Sprites
         customerSpaceObj = GameObject.Find("CustomerSpace");
@@ -251,24 +252,36 @@ public class CustomerOrders_ : MonoBehaviour
         {
             case orderEnum.STATE_GAME_START: //BEGIN GAME IN STATE_GAME_START
                 Debug.Log("Game has not started");
-                beginGameButton.SetActive(true);
                 orderNumber.text = ("0");
-                if(levelManager.LevelsEnum == LevelsEnum.STATE_LEVEL1)
-                {
-                customerSpaceRend.sprite = fireBoiNormal;
-                }
-                if (levelManager.LevelsEnum == LevelsEnum.STATE_LEVEL2)
-                {
-                    customerSpaceRend.sprite = funGuyNormal;
-                }
                 EmptyOrderTicket();
                 shutter.transform.position = shutterClosed.transform.position;
+
+                if(levelManager.gameplayActive)
+                    {
+                    beginGameButton.SetActive(true);
+                    Debug.Log("BeginButton is set active");
+                    }
+                else
+                    {
+                        beginGameButton.SetActive(false);
+                    }
+
+                if (levelManager.LevelsEnum == LevelsEnum.STATE_LEVEL1)
+                    {
+                    customerSpaceRend.sprite = fireBoiNormal;
+                    }
+
+                if (levelManager.LevelsEnum == LevelsEnum.STATE_LEVEL2)
+                    {
+                        customerSpaceRend.sprite = funGuyNormal;
+                    }
+
                 if (beginGame)
-                {
-                    //begin timer?
-                    beginGameButton.SetActive(false);
-                    orderEnum = orderEnum.STATE_CLOSED;
-                }
+                    {
+                        //begin timer?
+                        beginGameButton.SetActive(false);
+                        orderEnum = orderEnum.STATE_CLOSED;
+                    }
 
                 break;
 
@@ -316,7 +329,16 @@ public class CustomerOrders_ : MonoBehaviour
             case orderEnum.STATE_OPENED: 
                 Debug.Log("Shutter Opened");
                 ChangeOrderTicket();
-                submitButton.SetActive(true);
+                if (levelManager.gameplayActive)
+                {
+                    submitButton.SetActive(true);
+                    Debug.Log("SubmitButton is set active");
+                }
+                else
+                {
+                    submitButton.SetActive(false);
+                }
+
                 if (orderSubmit)
                 {
                     if (submitResult)

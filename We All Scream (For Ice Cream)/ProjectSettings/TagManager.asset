@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Cone
+  - Ingredient
+  - Scoop
+  - Sauce
+  - Topping
+  - Gameplay Buttons
   layers:
   - Default
   - TransparentFX
@@ -74,4 +79,7 @@ TagManager:
     locked: 0
   - name: Menu
     uniqueID: 3732653807
+    locked: 0
+  - name: Fade
+    uniqueID: 3179548373
     locked: 0
