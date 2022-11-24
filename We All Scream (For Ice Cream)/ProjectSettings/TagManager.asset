@@ -74,8 +74,14 @@ TagManager:
   - name: ErrorMsgsUI
     uniqueID: 1272182209
     locked: 0
-  - name: CustomerDiagloueUI
+  - name: IngredientUI
     uniqueID: 3928417587
+    locked: 0
+  - name: BasicUI
+    uniqueID: 4100214189
+    locked: 0
+  - name: Tutorial
+    uniqueID: 1479084497
     locked: 0
   - name: Menu
     uniqueID: 3732653807

@@ -31,12 +31,14 @@ public class Transitions : MonoBehaviour
     {
         Debug.Log("FadeOut is complete");
         fadeOutComplete = true;
+        fadeInComplete = false;
     }
 
     public void FadeInCompleteTrig()
     {
         Debug.Log("FadeIn is complete");
         fadeInComplete = true;
+        fadeOutComplete = false;
     }
 
 

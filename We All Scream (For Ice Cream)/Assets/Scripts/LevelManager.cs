@@ -7,19 +7,14 @@ using TMPro;
 //SCRIPT PURPOSE:
 //To change to different levels
 //Required:
-//Change of background
-//Enable/Disable ingredient buttons
 //Timer, scores Reset
 //Complete reset for builder, sprites etc
 //Change state
-//Fade to black transition? - Use a state?
-//Show Level number in corner - mainly for Debugging
-//Use this script to trigger bossevent method in Customer Orders
 
 public enum LevelsEnum
 {
-    STATE_MENU, //Main Menu image and buttons including sound bar
-    STATE_TUTORIAL, //Blue swipe across with images and arrows/next/continue buttons
+    STATE_MENU,
+    STATE_TUTORIAL,
     STATE_FADE,
     STATE_START, //Beginning state of gameplay, Begin button on shutter maybe or not needed? Can be used for countdown too
     STATE_LEVEL1, //Level 1 gameplay, changed when time is up
@@ -33,47 +28,58 @@ public enum LevelsEnum
 public class LevelManager : MonoBehaviour
 {
     public LevelsEnum LevelsEnum;
-    public TextMeshProUGUI levelNumber;
     public int levelTracker = 0; //0 is menu, 1 is tutorial, 2 is level 1, 3 is level 2, 4 is score, 5 is end
-    public int test = 0;
-    public int fadeRunOnce = 0;
+    //public int test = 0;
     public bool gameplayActive = false;
-    public GameObject mainMenu;
+    public float bannerSpeed;
+
+    public TextMeshProUGUI levelNumber;
     public Transitions transitions;
+    public CustomerOrders_ customerOrders;
+
+    public GameObject mainMenu;
     public GameObject submitButton;
     public GameObject beginGameButton;
     public GameObject ingredientButtons;
-    public CustomerOrders_ customerOrders;
-    public GameObject[] gameplayButtons;
+    public GameObject tutorialEmpty;
+    public GameObject tutorialBanner;
+    public GameObject tutorialBGShade;
+    public GameObject tutorialNext;
+    public GameObject tutorialWords;
+    //public GameObject tutorialBack;
 
+    private int fadeRunOnce = 0;
+    private Vector3 bannerOffScreen;
+    private Vector3 bannerOnScreen;
+    private SpriteRenderer tutorialBGShadeRend;
+    private GameObject[] gameplayButtons;
 
     void Start()
     {
         fadeRunOnce = 0;
         levelNumber.text = "0";
         LevelsEnum = LevelsEnum.STATE_MENU;
+        bannerOffScreen = new Vector3(-39, 0);
+        bannerOnScreen = new Vector3(0,0);
+        tutorialBanner.transform.position = bannerOffScreen;
+        tutorialEmpty.SetActive(false);
         mainMenu.SetActive(true);
         gameplayButtons = GameObject.FindGameObjectsWithTag("Gameplay Buttons");
+        tutorialBGShadeRend = tutorialBGShade.GetComponent<SpriteRenderer>();
     }
 
 
     void Update()
     {                
-        if(test == 2)
-                {
-                    LevelsEnum = LevelsEnum.STATE_FADE;
-                }
         Debug.Log("Level tracker = " + levelTracker);
         switch (LevelsEnum)
         {
-            //Beginning State
             case LevelsEnum.STATE_MENU:
                 levelTracker = 0;
-                mainMenu.SetActive(true);
                 levelNumber.text = "M";
+                mainMenu.SetActive(true);
                 gameplayActive = false;
-
-                //Game is started from Buttons
+                DisableGameButtons();
                 //Create Sound bar - audio manager needed first
                
                 break;
@@ -81,17 +87,32 @@ public class LevelManager : MonoBehaviour
             //Triggered from Start button using startGame() method 
             case LevelsEnum.STATE_TUTORIAL:
                 levelTracker = 1;
-                mainMenu.SetActive(false);
                 levelNumber.text = "T";
+                mainMenu.SetActive(false);
+                tutorialEmpty.SetActive(true);
+                tutorialNext.SetActive(false);
+                tutorialWords.SetActive(false);
 
-                //Move in swipe panel with instructions
+                if (transitions.fadeInComplete)
+                    {
+                    tutorialBanner.transform.position = Vector3.MoveTowards(tutorialBanner.transform.position, bannerOnScreen, bannerSpeed * Time.deltaTime);
+                    if (tutorialBanner.transform.position == bannerOnScreen)
+                    {
+                        tutorialNext.SetActive(true);
+                        tutorialWords.SetActive(true);
+
+                        //Appear Text
+                    }
+                }
                 //show arrows for next back slides
+                //if next button clicked appear new instructions
                 //use methods for each page of instructions - showTut1() - deactivate current strip and activate correct
+                //if last continue button clicked, move banner back to starting pos and fade out BG using Alpha colour setting
 
                 break;
 
             case LevelsEnum.STATE_FADE:
-                //If statements might not work? Try make into method
+                transitions.fadeInComplete = false;
 
                 if(fadeRunOnce == 0 )
                 {
@@ -104,57 +125,60 @@ public class LevelManager : MonoBehaviour
                     if (levelTracker == 0) //If on start menu, go to tutorial
                         {
                             LevelsEnum = LevelsEnum.STATE_TUTORIAL;
-                            transitions.fadeOutComplete = false;
                             fadeRunOnce = 0;
                             Debug.Log("State is now Tutorial");
                         }
                     if (levelTracker == 1) //If on tutorial, go to level 1
                         {
                             LevelsEnum = LevelsEnum.STATE_LEVEL1;
-                            transitions.fadeOutComplete = false;
                             fadeRunOnce = 0;
                         }
                     if (levelTracker == 2) //If on level 1, go to level 2
                         {
                             LevelsEnum = LevelsEnum.STATE_LEVEL2;
-                            transitions.fadeOutComplete = false;
                             fadeRunOnce = 0;
                         }
                     if (levelTracker == 3) //If on level 2, go to score
                         {
-                            LevelsEnum = LevelsEnum.STATE_END;
-                            transitions.fadeOutComplete = false;
+                            LevelsEnum = LevelsEnum.STATE_SCORE;
                             fadeRunOnce = 0;
                         }
                     if (levelTracker == 4) //If on score, go to end
                         {
-                            LevelsEnum = LevelsEnum.STATE_TUTORIAL;
-                            transitions.fadeOutComplete = false;
+                            LevelsEnum = LevelsEnum.STATE_END;
                             fadeRunOnce = 0;
                         }
                     if (levelTracker == 5) //If on end, go to main menu
                         {
-                            LevelsEnum = LevelsEnum.STATE_TUTORIAL;
-                            transitions.fadeOutComplete = false;
+                            LevelsEnum = LevelsEnum.STATE_MENU;
                             fadeRunOnce = 0;
                         }
                     if (levelTracker >= 100) //If on any level, go to start (pause menu exit?)
                         {
                             LevelsEnum = LevelsEnum.STATE_MENU;
-                            transitions.fadeOutComplete = false;
                             fadeRunOnce = 0;
                         }
                     transitions.FadeIn();
-                    //Debug.Log("Fade In triggered");
                     }
-
 
                 break;
 
             case LevelsEnum.STATE_START:
                 levelNumber.text = "0";
-                gameplayActive = true; //need to put somewhere without loop
-                //Beginning state of gameplay, Begin button on shutter maybe or not needed? Can be used for countdown too
+
+                if(tutorialBanner.activeSelf)
+                {
+                    tutorialBanner.transform.position = Vector3.MoveTowards(tutorialBanner.transform.position, bannerOffScreen, bannerSpeed * Time.deltaTime);
+                    tutorialBGShadeRend.color = new Color (0,0,0,0);
+                    tutorialNext.SetActive(false);
+                    tutorialWords.SetActive(false);
+                }
+                if(tutorialBanner.transform.position == bannerOffScreen)
+                {
+                    tutorialEmpty.SetActive(false);
+                }
+
+                //Beginning state of gameplay, Can be used for countdown too
 
                 break;
 
@@ -205,6 +229,14 @@ public class LevelManager : MonoBehaviour
         Application.Quit();
     }
 
+    public void TutorialNext()
+    {
+        Debug.Log("Tutorial Next triggered");
+        transitions.fadeInComplete = false;
+        gameplayActive = true;
+        LevelsEnum = LevelsEnum.STATE_START;
+    }
+
     public void DisableGameButtons()
     {
         //stops ingredient buttons from being used on main menu
@@ -234,8 +266,8 @@ public class LevelManager : MonoBehaviour
 
     public void Play()
     {
-        gameplayActive = true;
         EnableGameButtons();
-        Debug.Log("Game test UNpaused");
+        Debug.Log("Game PLAYING");
+        LevelsEnum = LevelsEnum.STATE_LEVEL1;
     }
 }

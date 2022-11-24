@@ -150,22 +150,22 @@ public class CustomerOrders_ : MonoBehaviour
         //Ticket Ingredient Sprites
         ticketPlainCone = Resources.Load<Sprite>("cones/plainCone");
 
-        ticketBoneScoop = Resources.Load<Sprite>("scoops/ticketBoneScoop");
-        ticketCosmicScoop = Resources.Load<Sprite>("scoops/ticketCosmicScoop");
-        ticketMagmaScoop = Resources.Load<Sprite>("scoops/ticketMagmaScoop");
-        ticketMeatScoop = Resources.Load<Sprite>("scoops/ticketMeatScoop");
-        ticketTropicalScoop = Resources.Load<Sprite>("scoops/ticketTropicalScoop");
+        ticketBoneScoop = Resources.Load<Sprite>("scoops/boneScoop");
+        ticketCosmicScoop = Resources.Load<Sprite>("scoops/cosmicScoop");
+        ticketMagmaScoop = Resources.Load<Sprite>("scoops/magmaScoop");
+        ticketMeatScoop = Resources.Load<Sprite>("scoops/meatScoop");
+        ticketTropicalScoop = Resources.Load<Sprite>("scoops/tropicalScoop");
 
-        ticketAcidSauce = Resources.Load<Sprite>("sauces/ticketAcidSauce");
-        ticketBloodySauce = Resources.Load<Sprite>("sauces/ticketBloodySauce");
-        ticketBloodyUnicornSauce = Resources.Load<Sprite>("sauces/ticketBloodyUnicornSauce");
-        ticketSoulSauce = Resources.Load<Sprite>("sauces/ticketSoulSauce");
+        ticketAcidSauce = Resources.Load<Sprite>("sauces/acidSauce");
+        ticketBloodySauce = Resources.Load<Sprite>("sauces/bloodySauce");
+        ticketBloodyUnicornSauce = Resources.Load<Sprite>("sauces/bloodyUnicornSauce");
+        ticketSoulSauce = Resources.Load<Sprite>("sauces/soulSauce");
 
-        ticketBatteriesTop = Resources.Load<Sprite>("toppings/ticketBatteriesTopping");
-        ticketEyeballsTop = Resources.Load<Sprite>("toppings/ticketEyeballsTopping");
-        ticketGemsTop = Resources.Load<Sprite>("toppings/ticketGemsTopping");
-        ticketGlassTop = Resources.Load<Sprite>("toppings/ticketGlassTopping");
-        ticketNettlesTop = Resources.Load<Sprite>("toppings/ticketNettlesTopping");
+        ticketBatteriesTop = Resources.Load<Sprite>("toppings/batteriesTopping");
+        ticketEyeballsTop = Resources.Load<Sprite>("toppings/eyeballsTopping");
+        ticketGemsTop = Resources.Load<Sprite>("toppings/gemsTopping");
+        ticketGlassTop = Resources.Load<Sprite>("toppings/glassTopping");
+        ticketNettlesTop = Resources.Load<Sprite>("toppings/nettlesTopping");
 
         //Cone Renderer
         buildCone = GameObject.FindGameObjectWithTag("Cone");
