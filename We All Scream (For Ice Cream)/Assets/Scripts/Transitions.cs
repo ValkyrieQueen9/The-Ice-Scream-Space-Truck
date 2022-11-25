@@ -9,7 +9,19 @@ public class Transitions : MonoBehaviour
     public bool fadeComplete = false;
     public bool fadeOutComplete = false;
     public bool fadeInComplete = false;
+    public bool MenuShutterComplete = false;
+    public bool CloseMenuShutComplete = false;
+    public bool OpenMenuShutComplete = false;
 
+    public void MenuShut()
+    {
+        animator.SetTrigger("MenuShutter");
+    }
+
+    public void MenuShutComplete()
+    {
+        MenuShutterComplete = true;
+    }
 
     public void FadeOut()
     {
