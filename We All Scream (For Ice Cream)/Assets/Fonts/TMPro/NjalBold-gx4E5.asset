@@ -57,9 +57,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
   m_Name: NjalBold-gx4E5
   m_EditorClassIdentifier: 
-  hashCode: 0
+  hashCode: -1841155046
   material: {fileID: -8926209575453380786}
-  materialHashCode: 0
+  materialHashCode: -1290255238
   m_Version: 1.1.0
   m_SourceFontFileGUID: 870a16f4e38cada4684f0e619dc7fa8a
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: 870a16f4e38cada4684f0e619dc7fa8a, type: 3}

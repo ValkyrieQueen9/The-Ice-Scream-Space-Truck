@@ -10,9 +10,8 @@ public enum orderEnum
     STATE_CLOSED,
     STATE_OPENING,
     STATE_OPENED,
-    STATE_CLOSING
-    //STATE_GAME_END - could switch scene?
-    //STATE_GAME_PAUSE - could make simple bool to check is paused? - not necessary?
+    STATE_CLOSING,
+    STATE_LEVEL_END
 }
 
 public class CustomerOrders_ : MonoBehaviour
@@ -344,7 +343,7 @@ public class CustomerOrders_ : MonoBehaviour
                     if (submitResult)
                     {
                         Count();
-                        orderNumber.text = (orderCount.ToString()); //Remember to clear this when day/level ends - add number to final game orders for later.
+                        orderNumber.text = (orderCount.ToString());
                         ChangeEmotionHappy();
                         StartCoroutine(Wait(orderEnum.STATE_CLOSING, shutterWaitTime));
                     }
@@ -372,9 +371,26 @@ public class CustomerOrders_ : MonoBehaviour
 
                 break;
 
+            case orderEnum.STATE_LEVEL_END:
+                if (levelManager.levelTimesUp)
+                {
+                    counterRunOnce = 0;
+                    submitButton.SetActive(false);
+                    //if shortPopUpcomplete == true
+                    //close shutter and clear everything?
+                    ClearOrder();
+                    EmptyOrderTicket();
+                    shutter.transform.position = Vector2.MoveTowards(shutter.transform.position, shutterClosed.transform.position, shutterSpeed * Time.deltaTime);
+                }
+
+
+                break;
+
             default:
                 break;
         }
+
+
     }        
 
     public void BeginGame()
@@ -417,12 +433,12 @@ public class CustomerOrders_ : MonoBehaviour
         return index;
     }
 
-    private bool ShutterOpened()
+    public bool ShutterOpened()
     {
         return shutter.transform.position == shutterOpen.transform.position;
     }
 
-    private bool ShutterClosed()
+    public bool ShutterClosed()
     {
         return shutter.transform.position == shutterClosed.transform.position;
     }

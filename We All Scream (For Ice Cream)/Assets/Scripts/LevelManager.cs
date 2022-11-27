@@ -28,14 +28,17 @@ public enum LevelsEnum
 public class LevelManager : MonoBehaviour
 {
     public LevelsEnum LevelsEnum;
-    public int levelTracker = 0; //0 is menu, 1 is tutorial, 2 is level 1, 3 is level 2, 4 is score, 5 is end
-    //public int test = 0;
     public bool gameplayActive = false;
+    public bool levelTimesUp = false;
+    public int levelTracker = 0; //0 is menu, 1 is tutorial, 2 is level 1, 3 is level 2, 4 is score, 5 is end
+    public int level1OrderCount = 0;
+    public int level2OrderCount = 0;
     public float bannerSpeed;
 
     public TextMeshProUGUI levelNumber;
     public Transitions transitions;
     public CustomerOrders_ customerOrders;
+    public Timer timer;
 
     public GameObject mainMenu;
     public GameObject submitButton;
@@ -47,6 +50,7 @@ public class LevelManager : MonoBehaviour
     public GameObject tutorialNext;
     public GameObject tutorialWords;
     //public GameObject tutorialBack;
+    public GameObject timesUpText;
 
     private int fadeRunOnce = 0;
     private Vector3 bannerOffScreen;
@@ -70,12 +74,19 @@ public class LevelManager : MonoBehaviour
 
 
     void Update()
-    {                
+    {             
+        if(gameplayActive == false)
+        {
+            timer.runTimer = false;
+        }
+
         Debug.Log("Level tracker = " + levelTracker);
         switch (LevelsEnum)
         {
             case LevelsEnum.STATE_MENU:
                 levelTracker = 0;
+                level1OrderCount = 0;
+                level2OrderCount = 0;
                 levelNumber.text = "M";
                 mainMenu.SetActive(true);
                 gameplayActive = false;
@@ -116,6 +127,7 @@ public class LevelManager : MonoBehaviour
 
                 if(fadeRunOnce == 0 )
                 {
+
                     transitions.FadeOut();
                     fadeRunOnce += 1;
                 }
@@ -133,19 +145,21 @@ public class LevelManager : MonoBehaviour
                             LevelsEnum = LevelsEnum.STATE_LEVEL1;
                             fadeRunOnce = 0;
                         }
-                    if (levelTracker == 2) //If on level 1, go to level 2
+                    if (levelTracker == 2) //If on level 1, go to score
                         {
-                            LevelsEnum = LevelsEnum.STATE_LEVEL2;
+                            LevelsEnum = LevelsEnum.STATE_SCORE;
+                            customerOrders.orderCount = 0;
                             fadeRunOnce = 0;
                         }
                     if (levelTracker == 3) //If on level 2, go to score
                         {
-                            LevelsEnum = LevelsEnum.STATE_SCORE;
+                            LevelsEnum = LevelsEnum.STATE_END;
+                            customerOrders.orderCount = 0;
                             fadeRunOnce = 0;
                         }
-                    if (levelTracker == 4) //If on score, go to end
+                    if (levelTracker == 4) //If on score, go to next level - will need tweaking when new levels added
                         {
-                            LevelsEnum = LevelsEnum.STATE_END;
+                            LevelsEnum = LevelsEnum.STATE_LEVEL2;
                             fadeRunOnce = 0;
                         }
                     if (levelTracker == 5) //If on end, go to main menu
@@ -177,20 +191,33 @@ public class LevelManager : MonoBehaviour
                 {
                     tutorialEmpty.SetActive(false);
                 }
-
-                //Beginning state of gameplay, Can be used for countdown too
+                //Button to begin
 
                 break;
 
             case LevelsEnum.STATE_LEVEL1:
+                levelTracker = 2;
                 levelNumber.text = "1";
-                //Level 1 gameplay, changed when time is up
+                timer.runTimer = true;
+                if(timer.secondsLeft <= 0)
+                {
+                    Debug.Log("Level 1 Times Up!");
+                    TimesUp();
+                    level1OrderCount = customerOrders.orderCount;
+                }
 
                 break;
 
             case LevelsEnum.STATE_LEVEL2:
+                levelTracker = 3;
                 levelNumber.text = "2";
-                //Level 2 gameplay, changed when time is up
+                timer.runTimer = true;
+                if (timer.secondsLeft <= 0)
+                {
+                    Debug.Log("Level 2 Times Up!");
+                    TimesUp();
+                    level2OrderCount = customerOrders.orderCount;
+                }
 
                 break;
 
@@ -201,6 +228,8 @@ public class LevelManager : MonoBehaviour
                 break;
 
             case LevelsEnum.STATE_SCORE:
+                levelNumber.text = "S";
+                levelTracker = 4;
                 //Fades to black and shows successful orders and time for that level only
                 //when continue is clicked - adds successful orders to total and wipes old order number? Does same with timer
 
@@ -231,7 +260,6 @@ public class LevelManager : MonoBehaviour
 
     public void TutorialNext()
     {
-        Debug.Log("Tutorial Next triggered");
         transitions.fadeInComplete = false;
         gameplayActive = true;
         LevelsEnum = LevelsEnum.STATE_START;
@@ -259,6 +287,7 @@ public class LevelManager : MonoBehaviour
 
     public void Pause()
     {
+        timer.runTimer = false;
         gameplayActive = false;
         DisableGameButtons();
         Debug.Log("Game test paused");
@@ -266,8 +295,36 @@ public class LevelManager : MonoBehaviour
 
     public void Play()
     {
+        timer.runTimer = true;
         EnableGameButtons();
         Debug.Log("Game PLAYING");
         LevelsEnum = LevelsEnum.STATE_LEVEL1;
     }
+
+    public void TimesUp()
+    {
+        timer.runTimer = false;
+        levelTimesUp = true;
+        timer.ResetTimer();
+        //Show Times Up Text
+        DisableGameButtons();
+        gameplayActive = false;
+        customerOrders.orderEnum = orderEnum.STATE_LEVEL_END;
+        //start CoRoutine Short PopUp
+        if(customerOrders.ShutterClosed())
+        {
+            LevelsEnum = LevelsEnum.STATE_FADE;
+        }
+    }
+
+    /*
+    IEnumerator ShortPopUp()
+    {
+        //Set popUp Complete as false
+        //Set Active UI Pop Up
+        //wait
+        //Set inactive UI Pop Up
+        //Set popUp Complete as true
+    }
+    */
 }
