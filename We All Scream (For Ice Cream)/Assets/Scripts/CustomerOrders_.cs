@@ -10,8 +10,7 @@ public enum orderEnum
     STATE_CLOSED,
     STATE_OPENING,
     STATE_OPENED,
-    STATE_CLOSING,
-    STATE_LEVEL_END
+    STATE_CLOSING
 }
 
 public class CustomerOrders_ : MonoBehaviour
@@ -41,9 +40,11 @@ public class CustomerOrders_ : MonoBehaviour
     public string orderSauce;
     public string orderTopping;
 
+    [HideInInspector]
+    public int counterRunOnce = 0;
+
     //Game
     private bool beginGame = false;
-    private int counterRunOnce = 0;
     private bool ignoreThis = true;
 
     //Customer Sprites
@@ -252,35 +253,36 @@ public class CustomerOrders_ : MonoBehaviour
             case orderEnum.STATE_GAME_START: //BEGIN GAME IN STATE_GAME_START
                 Debug.Log("Game has not started");
                 orderNumber.text = ("0");
+                counterRunOnce = 0;
                 EmptyOrderTicket();
+                ClearOrder();
                 shutter.transform.position = shutterClosed.transform.position;
 
-                if(levelManager.gameplayActive)
-                    {
+                if (levelManager.gameplayActive)
+                {
                     beginGameButton.SetActive(true);
                     Debug.Log("BeginButton is set active");
-                    }
+                }
                 else
-                    {
-                        beginGameButton.SetActive(false);
-                    }
+                {
+                    beginGameButton.SetActive(false);
+                }
 
                 if (levelManager.LevelsEnum == LevelsEnum.STATE_LEVEL1)
-                    {
+                {
                     customerSpaceRend.sprite = fireBoiNormal;
-                    }
+                }
 
                 if (levelManager.LevelsEnum == LevelsEnum.STATE_LEVEL2)
-                    {
-                        customerSpaceRend.sprite = funGuyNormal;
-                    }
+                {
+                    customerSpaceRend.sprite = funGuyNormal;
+                }
 
                 if (beginGame)
-                    {
-                        //begin timer?
-                        beginGameButton.SetActive(false);
-                        orderEnum = orderEnum.STATE_CLOSED;
-                    }
+                {
+                    beginGameButton.SetActive(false);
+                    orderEnum = orderEnum.STATE_CLOSED;
+                }
 
                 break;
 
@@ -289,21 +291,21 @@ public class CustomerOrders_ : MonoBehaviour
                 EmptyOrderTicket();
                 ClearOrder();
                 orderSubmit = false;
-                
+
                 if (beginGame)
-                   {
-                      orderEnum = orderEnum.STATE_OPENING;
-                   }
-                   else
-                   {
-                      StartCoroutine(Wait(orderEnum.STATE_OPENING, shutterWaitTime));
-                   }
+                {
+                    orderEnum = orderEnum.STATE_OPENING;
+                }
+                else
+                {
+                    StartCoroutine(Wait(orderEnum.STATE_OPENING, shutterWaitTime));
+                }
 
                 break;
 
-                //STATE_OPENING
+            //STATE_OPENING
             case orderEnum.STATE_OPENING:
-                Debug.Log("Shutter Opening");                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+                Debug.Log("Shutter Opening");
                 beginGame = false;
                 shutter.transform.position = Vector2.MoveTowards(shutter.transform.position, shutterOpen.transform.position, shutterSpeed * Time.deltaTime);
 
@@ -317,15 +319,15 @@ public class CustomerOrders_ : MonoBehaviour
                 orderSauce = ingredients[Randomiser(6, 10)];
                 orderTopping = ingredients[Randomiser(10, 15)];
 
-                if(ShutterOpened())
+                if (ShutterOpened())
                 {
                     orderEnum = orderEnum.STATE_OPENED;
                 }
 
                 break;
 
-                //STATE_OPENED
-            case orderEnum.STATE_OPENED: 
+            //STATE_OPENED
+            case orderEnum.STATE_OPENED:
                 Debug.Log("Shutter Opened");
                 ChangeOrderTicket();
                 if (levelManager.gameplayActive)
@@ -352,12 +354,12 @@ public class CustomerOrders_ : MonoBehaviour
                         ChangeEmotionAngry();
                         Debug.Log("Click restart to try again!");
                     }
-                    
+
                 }
 
                 break;
 
-                //STATE_CLOSING
+            //STATE_CLOSING
             case orderEnum.STATE_CLOSING:
                 Debug.Log("Shutter Closing");
                 counterRunOnce = 0;
@@ -365,26 +367,17 @@ public class CustomerOrders_ : MonoBehaviour
                 shutter.transform.position = Vector2.MoveTowards(shutter.transform.position, shutterClosed.transform.position, shutterSpeed * Time.deltaTime);
                 if (ShutterClosed())
                 {
-                    ChangeCustomer();
-                    orderEnum = orderEnum.STATE_CLOSED;
+                    if (levelManager.levelTimesUp == false)
+                    {
+                        ChangeCustomer();
+                        orderEnum = orderEnum.STATE_CLOSED;
+                    }
+                    else
+                        orderEnum = orderEnum.STATE_GAME_START;
                 }
 
-                break;
-
-            case orderEnum.STATE_LEVEL_END:
-                if (levelManager.levelTimesUp)
-                {
-                    counterRunOnce = 0;
-                    submitButton.SetActive(false);
-                    //if shortPopUpcomplete == true
-                    //close shutter and clear everything?
-                    ClearOrder();
-                    EmptyOrderTicket();
-                    shutter.transform.position = Vector2.MoveTowards(shutter.transform.position, shutterClosed.transform.position, shutterSpeed * Time.deltaTime);
-                }
-
-
-                break;
+   
+        break;
 
             default:
                 break;
@@ -416,21 +409,26 @@ public class CustomerOrders_ : MonoBehaviour
         Debug.Log("Results cleared");
     }
 
+    public void EmptyOrderTicket()
+    {
+        ticketConeRend.sprite = null;
+        ticketScoop1Rend.sprite = null;
+        ticketScoop2Rend.sprite = null;
+        ticketScoop3Rend.sprite = null;
+        ticketScoop4Rend.sprite = null;
+        ticketScoop5Rend.sprite = null;
+        ticketSauceRend.sprite = null;
+        ticketToppingRend.sprite = null;
+    }
+
     public void Count()
     {
         if(counterRunOnce == 0)
         {
             orderCount += 1;
             counterRunOnce += 1;
-            Debug.Log("Counter Ran");
         }
         
-    }
-
-    private int Randomiser(int x, int y)
-    {
-        int index = Random.Range(x, y);
-        return index;
     }
 
     public bool ShutterOpened()
@@ -441,6 +439,12 @@ public class CustomerOrders_ : MonoBehaviour
     public bool ShutterClosed()
     {
         return shutter.transform.position == shutterClosed.transform.position;
+    }
+
+    private int Randomiser(int x, int y)
+    {
+        int index = Random.Range(x, y);
+        return index;
     }
 
     private void ChangeCustomer() 
@@ -670,18 +674,6 @@ public class CustomerOrders_ : MonoBehaviour
         {
             ticketToppingRend.sprite = ticketNettlesTop;
         }
-    }
-
-    private void EmptyOrderTicket()
-    {
-        ticketConeRend.sprite = null;
-        ticketScoop1Rend.sprite = null;
-        ticketScoop2Rend.sprite = null;
-        ticketScoop3Rend.sprite = null;
-        ticketScoop4Rend.sprite = null;
-        ticketScoop5Rend.sprite = null;
-        ticketSauceRend.sprite = null;
-        ticketToppingRend.sprite = null;
     }
 
     private void CheckOrder()

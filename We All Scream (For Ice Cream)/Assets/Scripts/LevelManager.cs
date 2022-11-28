@@ -30,6 +30,7 @@ public class LevelManager : MonoBehaviour
     public LevelsEnum LevelsEnum;
     public bool gameplayActive = false;
     public bool levelTimesUp = false;
+    public bool popUpComplete = false;
     public int levelTracker = 0; //0 is menu, 1 is tutorial, 2 is level 1, 3 is level 2, 4 is score, 5 is end
     public int level1OrderCount = 0;
     public int level2OrderCount = 0;
@@ -44,17 +45,13 @@ public class LevelManager : MonoBehaviour
     public GameObject submitButton;
     public GameObject beginGameButton;
     public GameObject ingredientButtons;
-    public GameObject tutorialEmpty;
-    public GameObject tutorialBanner;
-    public GameObject tutorialBGShade;
-    public GameObject tutorialNext;
-    public GameObject tutorialWords;
+    public GameObject tutorialEmpty, tutorialBGShade, tutorialBanner, tutorialNext, tutorialWords;
     //public GameObject tutorialBack;
-    public GameObject timesUpText;
+    public GameObject scorePanel, scoreBGShade, scoreBanner ,scoreNext ,scoreText, scoreLevelText, scoreOrderNum;
 
+    private int nextLevel = 0;
     private int fadeRunOnce = 0;
-    private Vector3 bannerOffScreen;
-    private Vector3 bannerOnScreen;
+    private Vector3 bannerOffScreen, bannerOnScreen;
     private SpriteRenderer tutorialBGShadeRend;
     private GameObject[] gameplayButtons;
 
@@ -66,7 +63,9 @@ public class LevelManager : MonoBehaviour
         bannerOffScreen = new Vector3(-39, 0);
         bannerOnScreen = new Vector3(0,0);
         tutorialBanner.transform.position = bannerOffScreen;
+        scoreBanner.transform.position = bannerOffScreen;
         tutorialEmpty.SetActive(false);
+        scorePanel.SetActive(false);
         mainMenu.SetActive(true);
         gameplayButtons = GameObject.FindGameObjectsWithTag("Gameplay Buttons");
         tutorialBGShadeRend = tutorialBGShade.GetComponent<SpriteRenderer>();
@@ -99,6 +98,7 @@ public class LevelManager : MonoBehaviour
             case LevelsEnum.STATE_TUTORIAL:
                 levelTracker = 1;
                 levelNumber.text = "T";
+                nextLevel = 1;
                 mainMenu.SetActive(false);
                 tutorialEmpty.SetActive(true);
                 tutorialNext.SetActive(false);
@@ -131,7 +131,8 @@ public class LevelManager : MonoBehaviour
                     transitions.FadeOut();
                     fadeRunOnce += 1;
                 }
-
+                
+                //NEEDS ATTENTION!
                 if(transitions.fadeOutComplete) 
                     {
                     if (levelTracker == 0) //If on start menu, go to tutorial
@@ -151,9 +152,9 @@ public class LevelManager : MonoBehaviour
                             customerOrders.orderCount = 0;
                             fadeRunOnce = 0;
                         }
-                    if (levelTracker == 3) //If on level 2, go to score
+                    if (levelTracker == 3) //If on score, go to level 2
                         {
-                            LevelsEnum = LevelsEnum.STATE_END;
+                            LevelsEnum = LevelsEnum.STATE_LEVEL2;
                             customerOrders.orderCount = 0;
                             fadeRunOnce = 0;
                         }
@@ -191,17 +192,18 @@ public class LevelManager : MonoBehaviour
                 {
                     tutorialEmpty.SetActive(false);
                 }
-                //Button to begin
+
 
                 break;
 
             case LevelsEnum.STATE_LEVEL1:
                 levelTracker = 2;
                 levelNumber.text = "1";
-                timer.runTimer = true;
+                nextLevel = 2;
                 if(timer.secondsLeft <= 0)
                 {
                     Debug.Log("Level 1 Times Up!");
+                    timer.runTimer = false;
                     TimesUp();
                     level1OrderCount = customerOrders.orderCount;
                 }
@@ -211,6 +213,7 @@ public class LevelManager : MonoBehaviour
             case LevelsEnum.STATE_LEVEL2:
                 levelTracker = 3;
                 levelNumber.text = "2";
+                nextLevel = 3;
                 timer.runTimer = true;
                 if (timer.secondsLeft <= 0)
                 {
@@ -228,9 +231,34 @@ public class LevelManager : MonoBehaviour
                 break;
 
             case LevelsEnum.STATE_SCORE:
+
+
+                if (customerOrders.ShutterClosed())
+                {
+                    scorePanel.SetActive(true);
+                    scoreNext.SetActive(false);
+                    scoreText.SetActive(false);
+                    scoreLevelText.SetActive(false);
+                    scoreOrderNum.SetActive(false);
+                    scoreBanner.transform.position = Vector3.MoveTowards(scoreBanner.transform.position, bannerOnScreen, bannerSpeed * Time.deltaTime);
+                    if (scoreBanner.transform.position == bannerOnScreen)
+                    {
+                        if(nextLevel == 2)
+                        {
+                            ScoreShow(level1OrderCount);
+                        }
+                        if (nextLevel == 3)
+                        {
+                            ScoreShow(level2OrderCount);
+                        }
+                        scoreText.SetActive(true);
+                        scoreLevelText.SetActive(true);
+                        scoreNext.SetActive(true);
+                        scoreOrderNum.SetActive(true);
+                    }
                 levelNumber.text = "S";
                 levelTracker = 4;
-                //Fades to black and shows successful orders and time for that level only
+                }
                 //when continue is clicked - adds successful orders to total and wipes old order number? Does same with timer
 
                 break;
@@ -303,28 +331,29 @@ public class LevelManager : MonoBehaviour
 
     public void TimesUp()
     {
+        Debug.Log("TimesUp called");
+
         timer.runTimer = false;
         levelTimesUp = true;
-        timer.ResetTimer();
-        //Show Times Up Text
-        DisableGameButtons();
         gameplayActive = false;
-        customerOrders.orderEnum = orderEnum.STATE_LEVEL_END;
-        //start CoRoutine Short PopUp
-        if(customerOrders.ShutterClosed())
+        submitButton.SetActive(false);
+        DisableGameButtons();
+        //Trigger sound
+
+        //if (sound is finished?
+    
+        customerOrders.orderEnum = orderEnum.STATE_CLOSING;
+
+        if (customerOrders.ShutterClosed())
         {
-            LevelsEnum = LevelsEnum.STATE_FADE;
+            timer.ResetTimer();
+            LevelsEnum = LevelsEnum.STATE_SCORE;
         }
     }
 
-    /*
-    IEnumerator ShortPopUp()
+    public void ScoreShow(int orderCount)
     {
-        //Set popUp Complete as false
-        //Set Active UI Pop Up
-        //wait
-        //Set inactive UI Pop Up
-        //Set popUp Complete as true
+        scoreOrderNum.GetComponent<TextMeshProUGUI>().text = orderCount.ToString();
     }
-    */
+
 }
