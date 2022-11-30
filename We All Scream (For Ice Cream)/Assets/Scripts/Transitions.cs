@@ -22,20 +22,17 @@ public class Transitions : MonoBehaviour
 
     public void FadeComplete()
     {
-        Debug.Log("Fade is complete");
         fadeComplete = true;
     }
 
     public void FadeOutCompleteTrig()
     {
-        Debug.Log("FadeOut is complete");
         fadeOutComplete = true;
         fadeInComplete = false;
     }
 
     public void FadeInCompleteTrig()
     {
-        Debug.Log("FadeIn is complete");
         fadeInComplete = true;
         fadeOutComplete = false;
     }

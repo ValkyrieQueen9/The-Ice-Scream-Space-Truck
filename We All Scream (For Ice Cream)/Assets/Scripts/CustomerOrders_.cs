@@ -20,6 +20,7 @@ public class CustomerOrders_ : MonoBehaviour
 
     public GameObject beginGameButton;
     public GameObject submitButton;
+    public GameObject restartButton;
     public orderEnum orderEnum;
     public int orderCount = 0;
 
@@ -42,9 +43,9 @@ public class CustomerOrders_ : MonoBehaviour
 
     [HideInInspector]
     public int counterRunOnce = 0;
+    public bool beginGame = false;
 
     //Game
-    private bool beginGame = false;
     private bool ignoreThis = true;
 
     //Customer Sprites
@@ -99,6 +100,7 @@ public class CustomerOrders_ : MonoBehaviour
         //For each level there are different flavours being used. Use: if(scene level 1? or state level 1?) then define scoops 1-2 only 
         submitButton.SetActive(false);
         beginGameButton.SetActive(false);
+        restartButton.SetActive(false);
 
         //Customer Sprites
         customerSpaceObj = GameObject.Find("CustomerSpace");
@@ -261,7 +263,6 @@ public class CustomerOrders_ : MonoBehaviour
                 if (levelManager.gameplayActive)
                 {
                     beginGameButton.SetActive(true);
-                    Debug.Log("BeginButton is set active");
                 }
                 else
                 {
@@ -287,7 +288,6 @@ public class CustomerOrders_ : MonoBehaviour
                 break;
 
             case orderEnum.STATE_CLOSED: //STATE_CLOSED
-                Debug.Log("Shutter is Closed");
                 EmptyOrderTicket();
                 ClearOrder();
                 orderSubmit = false;
@@ -305,7 +305,6 @@ public class CustomerOrders_ : MonoBehaviour
 
             //STATE_OPENING
             case orderEnum.STATE_OPENING:
-                Debug.Log("Shutter Opening");
                 beginGame = false;
                 shutter.transform.position = Vector2.MoveTowards(shutter.transform.position, shutterOpen.transform.position, shutterSpeed * Time.deltaTime);
 
@@ -328,15 +327,15 @@ public class CustomerOrders_ : MonoBehaviour
 
             //STATE_OPENED
             case orderEnum.STATE_OPENED:
-                Debug.Log("Shutter Opened");
                 ChangeOrderTicket();
                 if (levelManager.gameplayActive)
                 {
                     submitButton.SetActive(true);
-                    Debug.Log("SubmitButton is set active");
+                    restartButton.SetActive(true);
                 }
                 else
                 {
+                    restartButton.SetActive(false);
                     submitButton.SetActive(false);
                 }
 
@@ -352,7 +351,6 @@ public class CustomerOrders_ : MonoBehaviour
                     else
                     {
                         ChangeEmotionAngry();
-                        Debug.Log("Click restart to try again!");
                     }
 
                 }
@@ -361,9 +359,9 @@ public class CustomerOrders_ : MonoBehaviour
 
             //STATE_CLOSING
             case orderEnum.STATE_CLOSING:
-                Debug.Log("Shutter Closing");
                 counterRunOnce = 0;
                 submitButton.SetActive(false);
+                restartButton.SetActive(false);
                 shutter.transform.position = Vector2.MoveTowards(shutter.transform.position, shutterClosed.transform.position, shutterSpeed * Time.deltaTime);
                 if (ShutterClosed())
                 {
@@ -406,7 +404,6 @@ public class CustomerOrders_ : MonoBehaviour
         topping1Rend.sprite = null; topping2Rend.sprite = null; topping3Rend.sprite = null; topping4Rend.sprite = null; topping5Rend.sprite = null;
 
         coneResult = false; scoop1Result = false; scoop2Result = false; scoop3Result = false; scoop4Result = false; scoop5Result = false; sauceResult = false; toppingResult = false; submitResult = false;
-        Debug.Log("Results cleared");
     }
 
     public void EmptyOrderTicket()
@@ -450,7 +447,6 @@ public class CustomerOrders_ : MonoBehaviour
     private void ChangeCustomer() 
     {
         //Unsure how this will work with more customers
-        Debug.Log("Changing Customer...");
         if (levelManager.LevelsEnum == LevelsEnum.STATE_LEVEL1)
         {
 
@@ -683,8 +679,6 @@ public class CustomerOrders_ : MonoBehaviour
         //LEVEL 1 CHECKS - 2 Scoops 
         if (levelManager.LevelsEnum == LevelsEnum.STATE_LEVEL1) //If game is on Level 1 only check cone, scoop1, sauce and topping
         {
-            Debug.Log("Checking Orders for Level 1....");
-
             if (string.Compare(orderCone, buildConeRend.sprite.name) == 0)
             {
                 coneResult = true;
@@ -749,8 +743,6 @@ public class CustomerOrders_ : MonoBehaviour
         //LEVEL 2 CHECKS - 3 Scoops
         if (levelManager.LevelsEnum == LevelsEnum.STATE_LEVEL2)
         {
-            Debug.Log("Checking Orders for Level 2....");
-
             if (string.Compare(orderCone, buildConeRend.sprite.name) == 0)
             {
                 coneResult = true;
@@ -825,7 +817,6 @@ public class CustomerOrders_ : MonoBehaviour
         //LEVEL 3 CHECKS - 5 Scoops
         if (levelManager.LevelsEnum == LevelsEnum.STATE_LEVEL3)
         {
-            Debug.Log("Checking Orders for Level 3....");
 
             if (string.Compare(orderCone, buildConeRend.sprite.name) == 0)
             {
@@ -922,8 +913,6 @@ public class CustomerOrders_ : MonoBehaviour
         //ALL OPTIONS CHECKS 
         if (levelManager.LevelsEnum != LevelsEnum.STATE_START && levelManager.LevelsEnum != LevelsEnum.STATE_END)
         {
-            Debug.Log("Checking Orders...");
-
             if (buildConeRend.sprite == null)
                 {
                     Debug.Log("Missing a cone!");
@@ -1051,7 +1040,6 @@ public class CustomerOrders_ : MonoBehaviour
 
     IEnumerator Wait (orderEnum state, float waitFor)
     {
-        Debug.Log("Waiting...");
         yield return new WaitForSeconds(waitFor);
         orderEnum = state;
     }

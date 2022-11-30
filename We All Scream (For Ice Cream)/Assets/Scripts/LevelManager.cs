@@ -22,7 +22,6 @@ public enum LevelsEnum
     STATE_LEVEL3, //Level 2 gameplay- changed when time is up
     STATE_SCORE, //Fades to black and shows successful orders and time when continue is clicked - adds successful orders to total and wipes old order number? Includes total time
     STATE_END, //Fades to end menu with total score and time? 
-    STATE_PAUSE //Maybe not necessary? hard to return to previous state?
 }
 
 public class LevelManager : MonoBehaviour
@@ -81,7 +80,6 @@ public class LevelManager : MonoBehaviour
             timer.runTimer = false;
         }
 
-        Debug.Log("Level tracker = " + levelTracker);
         switch (LevelsEnum)
         {
             case LevelsEnum.STATE_MENU:
@@ -142,7 +140,6 @@ public class LevelManager : MonoBehaviour
                         {
                             LevelsEnum = LevelsEnum.STATE_TUTORIAL;
                             fadeRunOnce = 0;
-                            Debug.Log("State is now Tutorial");
                         }
                     if (levelTracker == 1) //If on tutorial, go to level 1
                         {
@@ -183,7 +180,6 @@ public class LevelManager : MonoBehaviour
 
             case LevelsEnum.STATE_START:
                 levelNumber.text = "0";
-
                 if(tutorialBanner.activeSelf)
                 {
                     tutorialBanner.transform.position = Vector3.MoveTowards(tutorialBanner.transform.position, bannerOffScreen, bannerSpeed * Time.deltaTime);
@@ -196,6 +192,35 @@ public class LevelManager : MonoBehaviour
                     tutorialEmpty.SetActive(false);
                 }
 
+                if(scoreBanner.activeSelf)
+                {
+                     Debug.Log("Next Day Triggered");
+                     scoreBanner.transform.position = Vector3.MoveTowards(scoreBanner.transform.position, bannerOffScreenRight, bannerSpeed * Time.deltaTime);
+                     scoreBGShade.SetActive(false);
+                     scoreNext.SetActive(false);
+                     scoreText.SetActive(false);
+                     scoreLevelText.SetActive(false);
+                     scoreOrderNum.SetActive(false);
+                }
+                if(scoreBanner.transform.position == bannerOffScreenRight)
+                {
+                     scoreBanner.transform.position = bannerOffScreen;
+                     scorePanel.SetActive(false);
+                }
+
+                if(customerOrders.beginGame)
+                {
+                     if (nextLevel == 2)
+                     {
+                           nextDayTriggered = false;
+                           LevelsEnum = LevelsEnum.STATE_LEVEL2;
+                     }
+                     if (nextLevel == 3)
+                     {
+                           nextDayTriggered = false;
+                           LevelsEnum = LevelsEnum.STATE_LEVEL3;
+                     }
+                }
 
                 break;
 
@@ -203,10 +228,10 @@ public class LevelManager : MonoBehaviour
                 levelTracker = 2;
                 levelNumber.text = "1";
                 nextLevel = 2;
+
                 if(timer.secondsLeft <= 0)
                 {
                     Debug.Log("Level 1 Times Up!");
-                    timer.runTimer = false;
                     TimesUp();
                     level1OrderCount = customerOrders.orderCount;
                 }
@@ -216,8 +241,8 @@ public class LevelManager : MonoBehaviour
             case LevelsEnum.STATE_LEVEL2:
                 levelTracker = 3;
                 levelNumber.text = "2";
-                nextLevel = 3;
-                timer.runTimer = true;
+                nextLevel = 5;
+
                 if (timer.secondsLeft <= 0)
                 {
                     Debug.Log("Level 2 Times Up!");
@@ -237,7 +262,7 @@ public class LevelManager : MonoBehaviour
 
                 if (nextDayTriggered == false)
                 {
-
+                    gameplayActive = false;
                     if (customerOrders.ShutterClosed())
                     {
                         scorePanel.SetActive(true);
@@ -245,7 +270,11 @@ public class LevelManager : MonoBehaviour
                         scoreText.SetActive(false);
                         scoreLevelText.SetActive(false);
                         scoreOrderNum.SetActive(false);
+                        if(scoreBanner.activeSelf)
+                        {
                         scoreBanner.transform.position = Vector3.MoveTowards(scoreBanner.transform.position, bannerOnScreen, bannerSpeed * Time.deltaTime);
+                        }
+
                         if (scoreBanner.transform.position == bannerOnScreen)
                         {
                             if (nextLevel == 2)
@@ -267,37 +296,19 @@ public class LevelManager : MonoBehaviour
                     }
 
                 }
-                else if (nextDayTriggered && scoreBanner.activeSelf)
-                        {
-                            Debug.Log("Next Day Triggered");
-                            scoreBanner.transform.position = Vector3.MoveTowards(scoreBanner.transform.position, bannerOffScreenRight, bannerSpeed * Time.deltaTime);
-                            scoreBGShade.SetActive(false);
-                            scoreNext.SetActive(false);
-                            scoreText.SetActive(false);
-                            scoreLevelText.SetActive(false);
-                            scoreOrderNum.SetActive(false);
-                        }
-                        if (scoreBanner.transform.position == bannerOffScreenRight)
-                        {
-                            scorePanel.SetActive(false);
-                            if (nextLevel == 2)
-                            {
-                                nextDayTriggered = false;
-                                LevelsEnum = LevelsEnum.STATE_LEVEL2;
-                            }
-                            if (nextLevel == 3)
-                            {
-                                nextDayTriggered = false;
-                                LevelsEnum = LevelsEnum.STATE_LEVEL3;
-                            }
-                        }
 
                 //when continue is clicked - adds successful orders to total and wipes old order number? Does same with timer
 
                 break;
 
             case LevelsEnum.STATE_END:
+                levelTracker = 5;
                 levelNumber.text = "X";
+                nextLevel = 0;
+                gameplayActive = false;
+                levelTimesUp = false;
+                
+
                 //Fades to end menu with total score and time?
 
                 break;
@@ -307,6 +318,7 @@ public class LevelManager : MonoBehaviour
         }
 
     }
+
 
     public void StartGame()
     {
@@ -329,6 +341,9 @@ public class LevelManager : MonoBehaviour
     public void NextDay()
     {
         nextDayTriggered = true;
+        gameplayActive = true;
+        levelTimesUp = false;
+        LevelsEnum = LevelsEnum.STATE_START;
     }
 
     public void DisableGameButtons()
@@ -337,7 +352,6 @@ public class LevelManager : MonoBehaviour
         foreach(GameObject gameplayButton in gameplayButtons)
             {
             gameplayButton.SetActive(false);
-            Debug.Log("All buttons are disabled");
             }
     }
 
@@ -347,7 +361,6 @@ public class LevelManager : MonoBehaviour
         foreach (GameObject gameplayButton in gameplayButtons)
         {
             gameplayButton.SetActive(true);
-            Debug.Log("Most buttons are enabled!");
         }
     }
 
@@ -356,14 +369,26 @@ public class LevelManager : MonoBehaviour
         timer.runTimer = false;
         gameplayActive = false;
         DisableGameButtons();
-        Debug.Log("Game test paused");
+    }
+
+    public void UnPause()
+    {
+        EnableGameButtons();
+        if (LevelsEnum != LevelsEnum.STATE_FADE && LevelsEnum != LevelsEnum.STATE_SCORE && LevelsEnum != LevelsEnum.STATE_TUTORIAL && LevelsEnum != LevelsEnum.STATE_END )
+        {
+            gameplayActive = true;
+            if (LevelsEnum != LevelsEnum.STATE_START)
+            {
+            timer.runTimer = true;
+            }
+        }
+
     }
 
     public void Play()
     {
         timer.runTimer = true;
         EnableGameButtons();
-        Debug.Log("Game PLAYING");
         if (nextLevel == 1)
         {
             LevelsEnum = LevelsEnum.STATE_LEVEL1;
@@ -380,23 +405,28 @@ public class LevelManager : MonoBehaviour
 
     public void TimesUp()
     {
-        Debug.Log("TimesUp called");
-
         timer.runTimer = false;
         levelTimesUp = true;
-        gameplayActive = false;
         submitButton.SetActive(false);
         DisableGameButtons();
         //Trigger sound
 
         //if (sound is finished?
-    
+
         customerOrders.orderEnum = orderEnum.STATE_CLOSING;
 
         if (customerOrders.ShutterClosed())
         {
             timer.ResetTimer();
-            LevelsEnum = LevelsEnum.STATE_SCORE;
+            if (nextLevel == 2 || nextLevel == 3)
+            {
+                LevelsEnum = LevelsEnum.STATE_SCORE;
+            }
+            if (nextLevel == 5)
+            {
+                LevelsEnum = LevelsEnum.STATE_END;
+            }
+
         }
     }
 
