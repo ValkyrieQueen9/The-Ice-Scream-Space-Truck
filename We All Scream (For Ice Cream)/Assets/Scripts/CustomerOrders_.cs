@@ -254,6 +254,7 @@ public class CustomerOrders_ : MonoBehaviour
         {
             case orderEnum.STATE_GAME_START: //BEGIN GAME IN STATE_GAME_START
                 Debug.Log("Game has not started");
+                orderCount = 0;
                 orderNumber.text = ("0");
                 counterRunOnce = 0;
                 EmptyOrderTicket();

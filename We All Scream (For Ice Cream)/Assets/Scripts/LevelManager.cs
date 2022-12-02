@@ -31,7 +31,9 @@ public class LevelManager : MonoBehaviour
     public bool levelTimesUp = false;
     public bool popUpComplete = false;
     public bool nextDayTriggered = false;
+    public bool continueTriggered = false;
     public int levelTracker = 0; //0 is menu, 1 is tutorial, 2 is level 1, 3 is level 2, 4 is score, 5 is end
+    public int nextLevel = 0;
     public int level1OrderCount = 0;
     public int level2OrderCount = 0;
     public float bannerSpeed;
@@ -47,9 +49,10 @@ public class LevelManager : MonoBehaviour
     public GameObject ingredientButtons;
     public GameObject tutorialEmpty, tutorialBGShade, tutorialBanner, tutorialNext, tutorialWords;
     //public GameObject tutorialBack;
-    public GameObject scorePanel, scoreBGShade, scoreBanner ,scoreNext ,scoreText, scoreLevelText, scoreOrderNum;
+    public GameObject scorePanel, scoreBGShade, scoreBanner, scoreNext, scoreText, scoreLevelText, scoreOrderNum;
+    public GameObject scoreScoopsPanel, scoreScoop1, scoreScoop2, scoreScoop3;
+    public GameObject endPanel, contButton, endText, endButton;
 
-    private int nextLevel = 0;
     private int fadeRunOnce = 0;
     private Vector3 bannerOffScreen, bannerOnScreen, bannerOffScreenRight;
     private SpriteRenderer tutorialBGShadeRend;
@@ -67,7 +70,9 @@ public class LevelManager : MonoBehaviour
         scoreBanner.transform.position = bannerOffScreen;
         tutorialEmpty.SetActive(false);
         scorePanel.SetActive(false);
+        endPanel.SetActive(false);
         mainMenu.SetActive(true);
+        scoreScoopsPanel.SetActive(false);
         gameplayButtons = GameObject.FindGameObjectsWithTag("Gameplay Buttons");
         tutorialBGShadeRend = tutorialBGShade.GetComponent<SpriteRenderer>();
     }
@@ -104,18 +109,11 @@ public class LevelManager : MonoBehaviour
                 tutorialEmpty.SetActive(true);
                 tutorialNext.SetActive(false);
                 tutorialWords.SetActive(false);
-
-                if (transitions.fadeInComplete)
-                    {
-                    tutorialBanner.transform.position = Vector3.MoveTowards(tutorialBanner.transform.position, bannerOnScreen, bannerSpeed * Time.deltaTime);
-                    if (tutorialBanner.transform.position == bannerOnScreen)
-                    {
-                        tutorialNext.SetActive(true);
-                        tutorialWords.SetActive(true);
-
+                tutorialBanner.transform.position = bannerOnScreen;
+                tutorialNext.SetActive(true);
+                tutorialWords.SetActive(true);
                         //Appear Text
-                    }
-                }
+
                 //show arrows for next back slides
                 //if next button clicked appear new instructions
                 //use methods for each page of instructions - showTut1() - deactivate current strip and activate correct
@@ -270,7 +268,7 @@ public class LevelManager : MonoBehaviour
                         scoreText.SetActive(false);
                         scoreLevelText.SetActive(false);
                         scoreOrderNum.SetActive(false);
-                        if(scoreBanner.activeSelf)
+                        if (scoreBanner.activeSelf)
                         {
                         scoreBanner.transform.position = Vector3.MoveTowards(scoreBanner.transform.position, bannerOnScreen, bannerSpeed * Time.deltaTime);
                         }
@@ -280,15 +278,14 @@ public class LevelManager : MonoBehaviour
                             if (nextLevel == 2)
                             {
                                 ScoreShow(level1OrderCount);
-                            }
-                            if (nextLevel == 3)
-                            {
-                                ScoreShow(level2OrderCount);
+                                scoreLevelText.GetComponent<TextMeshProUGUI>().text = "DAY 1 COMPLETE!".ToString();
                             }
                             scoreText.SetActive(true);
                             scoreLevelText.SetActive(true);
                             scoreNext.SetActive(true);
                             scoreOrderNum.SetActive(true);
+                            //Start Coroutine to Pop In SCOOPS!
+
                         }
                         levelNumber.text = "S";
                         levelTracker = 4;
@@ -302,12 +299,40 @@ public class LevelManager : MonoBehaviour
                 break;
 
             case LevelsEnum.STATE_END:
-                levelTracker = 5;
-                levelNumber.text = "X";
-                nextLevel = 0;
+
                 gameplayActive = false;
                 levelTimesUp = false;
-                
+
+                if (customerOrders.ShutterClosed() && continueTriggered == false)
+                {
+                    scorePanel.SetActive(true);
+                    contButton.SetActive(false);
+                    scoreText.SetActive(false);
+                    scoreLevelText.SetActive(false);
+                    scoreOrderNum.SetActive(false);
+                    if (scoreBanner.activeSelf)
+                    {
+                        scoreBanner.transform.position = Vector3.MoveTowards(scoreBanner.transform.position, bannerOnScreen, bannerSpeed * Time.deltaTime);
+                    }
+
+                    if (scoreBanner.transform.position == bannerOnScreen)
+                    {
+                        scoreLevelText.GetComponent<TextMeshProUGUI>().text = "DAY 2 COMPLETE!".ToString();
+                        ScoreShow(level2OrderCount);
+
+                        scoreText.SetActive(true);
+                        scoreLevelText.SetActive(true);
+                        scoreOrderNum.SetActive(true);
+                        endPanel.SetActive(true);
+                        contButton.SetActive(true);
+                        endText.SetActive(false);
+                        endButton.SetActive(false);
+                    }                        
+                    nextLevel = 0;
+                    levelNumber.text = "X";
+                    levelTracker = 5;
+
+                }
 
                 //Fades to end menu with total score and time?
 
@@ -344,6 +369,27 @@ public class LevelManager : MonoBehaviour
         gameplayActive = true;
         levelTimesUp = false;
         LevelsEnum = LevelsEnum.STATE_START;
+    }
+
+    public void Continue()
+    {
+        continueTriggered = true;
+        Debug.Log("Continue Clicked...");
+        contButton.SetActive(false);
+        scoreText.SetActive(false);
+        scoreLevelText.SetActive(false);
+        scoreOrderNum.SetActive(false);
+
+        endText.SetActive(true);
+        endButton.SetActive(true);
+    }
+    
+    public void RestartGame()
+    {
+        Debug.Log("Restarting Game...");
+        //Restart all bools
+        //Change states
+        //Reset variables and gameobjects
     }
 
     public void DisableGameButtons()
@@ -422,7 +468,7 @@ public class LevelManager : MonoBehaviour
             {
                 LevelsEnum = LevelsEnum.STATE_SCORE;
             }
-            if (nextLevel == 5)
+            else if (nextLevel == 5)
             {
                 LevelsEnum = LevelsEnum.STATE_END;
             }
@@ -434,5 +480,6 @@ public class LevelManager : MonoBehaviour
     {
         scoreOrderNum.GetComponent<TextMeshProUGUI>().text = orderCount.ToString();
     }
+
 
 }
