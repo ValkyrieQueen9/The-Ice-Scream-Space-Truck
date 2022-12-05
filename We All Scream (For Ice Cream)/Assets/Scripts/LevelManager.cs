@@ -36,6 +36,7 @@ public class LevelManager : MonoBehaviour
     public int nextLevel = 0;
     public int level1OrderCount = 0;
     public int level2OrderCount = 0;
+    public float scoopPopUpSpeed;
     public float bannerSpeed;
 
     public TextMeshProUGUI levelNumber;
@@ -55,7 +56,8 @@ public class LevelManager : MonoBehaviour
 
     private int fadeRunOnce = 0;
     private Vector3 bannerOffScreen, bannerOnScreen, bannerOffScreenRight;
-    private SpriteRenderer tutorialBGShadeRend;
+    private Sprite bronzeScoop, silverScoop, goldScoop;
+    private SpriteRenderer tutorialBGShadeRend, scoreScoop1Rend, scoreScoop2Rend, scoreScoop3Rend;
     private GameObject[] gameplayButtons;
 
     void Start()
@@ -75,6 +77,12 @@ public class LevelManager : MonoBehaviour
         scoreScoopsPanel.SetActive(false);
         gameplayButtons = GameObject.FindGameObjectsWithTag("Gameplay Buttons");
         tutorialBGShadeRend = tutorialBGShade.GetComponent<SpriteRenderer>();
+        scoreScoop1Rend = scoreScoop1.GetComponent<SpriteRenderer>();
+        scoreScoop2Rend = scoreScoop2.GetComponent<SpriteRenderer>();
+        scoreScoop3Rend = scoreScoop3.GetComponent<SpriteRenderer>();
+        bronzeScoop = Resources.Load<Sprite>("score/bronzeScoop");
+        silverScoop = Resources.Load<Sprite>("score/silverScoop");
+        goldScoop = Resources.Load<Sprite>("score/goldScoop");
     }
 
 
@@ -95,6 +103,7 @@ public class LevelManager : MonoBehaviour
                 mainMenu.SetActive(true);
                 gameplayActive = false;
                 nextDayTriggered = false;
+                scoreBanner.transform.position = bannerOffScreen;
                 DisableGameButtons();
                 //Create Sound bar - audio manager needed first
                
@@ -126,7 +135,6 @@ public class LevelManager : MonoBehaviour
 
                 if(fadeRunOnce == 0 )
                 {
-
                     transitions.FadeOut();
                     fadeRunOnce += 1;
                 }
@@ -199,10 +207,10 @@ public class LevelManager : MonoBehaviour
                      scoreText.SetActive(false);
                      scoreLevelText.SetActive(false);
                      scoreOrderNum.SetActive(false);
+                     ResetScoreScoops();
                 }
                 if(scoreBanner.transform.position == bannerOffScreenRight)
                 {
-                     scoreBanner.transform.position = bannerOffScreen;
                      scorePanel.SetActive(false);
                 }
 
@@ -226,7 +234,7 @@ public class LevelManager : MonoBehaviour
                 levelTracker = 2;
                 levelNumber.text = "1";
                 nextLevel = 2;
-
+                scoreBanner.transform.position = bannerOffScreen;
                 if(timer.secondsLeft <= 0)
                 {
                     Debug.Log("Level 1 Times Up!");
@@ -240,6 +248,7 @@ public class LevelManager : MonoBehaviour
                 levelTracker = 3;
                 levelNumber.text = "2";
                 nextLevel = 5;
+                scoreBanner.transform.position = bannerOffScreen;
 
                 if (timer.secondsLeft <= 0)
                 {
@@ -278,13 +287,14 @@ public class LevelManager : MonoBehaviour
                             if (nextLevel == 2)
                             {
                                 ScoreShow(level1OrderCount);
+                                scoreScoopsPanel.SetActive(true);
+                                StartCoroutine(scoreResultPopUp(level1OrderCount));
                                 scoreLevelText.GetComponent<TextMeshProUGUI>().text = "DAY 1 COMPLETE!".ToString();
                             }
                             scoreText.SetActive(true);
                             scoreLevelText.SetActive(true);
                             scoreNext.SetActive(true);
                             scoreOrderNum.SetActive(true);
-                            //Start Coroutine to Pop In SCOOPS!
 
                         }
                         levelNumber.text = "S";
@@ -319,6 +329,8 @@ public class LevelManager : MonoBehaviour
                     {
                         scoreLevelText.GetComponent<TextMeshProUGUI>().text = "DAY 2 COMPLETE!".ToString();
                         ScoreShow(level2OrderCount);
+                        scoreScoopsPanel.SetActive(true);
+                        StartCoroutine(scoreResultPopUp(level2OrderCount));
 
                         scoreText.SetActive(true);
                         scoreLevelText.SetActive(true);
@@ -365,6 +377,7 @@ public class LevelManager : MonoBehaviour
 
     public void NextDay()
     {
+        Debug.Log("Next Day Triggered");
         nextDayTriggered = true;
         gameplayActive = true;
         levelTimesUp = false;
@@ -375,6 +388,7 @@ public class LevelManager : MonoBehaviour
     {
         continueTriggered = true;
         Debug.Log("Continue Clicked...");
+        scoreScoopsPanel.SetActive(false);
         contButton.SetActive(false);
         scoreText.SetActive(false);
         scoreLevelText.SetActive(false);
@@ -387,9 +401,13 @@ public class LevelManager : MonoBehaviour
     public void RestartGame()
     {
         Debug.Log("Restarting Game...");
-        //Restart all bools
-        //Change states
-        //Reset variables and gameobjects
+
+        continueTriggered = false;
+        LevelsEnum = LevelsEnum.STATE_FADE;
+        customerOrders.orderEnum = orderEnum.STATE_GAME_START;
+        scorePanel.SetActive(false);
+        scoreScoopsPanel.SetActive(false);
+        endPanel.SetActive(false);
     }
 
     public void DisableGameButtons()
@@ -476,10 +494,54 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    public void ResetScoreScoops()
+    {
+        scoreScoop1Rend.sprite = null;
+        scoreScoop2Rend.sprite = null;
+        scoreScoop3Rend.sprite = null;
+        scoreScoopsPanel.SetActive(false);
+    }
+
     public void ScoreShow(int orderCount)
     {
         scoreOrderNum.GetComponent<TextMeshProUGUI>().text = orderCount.ToString();
     }
 
+    IEnumerator scoreResultPopUp(int levelScore)
+    { 
+            if(levelScore == 0)
+                {
+                yield return new WaitForSeconds(scoopPopUpSpeed);
+                scoreScoop1Rend.sprite = bronzeScoop;
+                    yield return new WaitForSeconds(scoopPopUpSpeed);
+                    scoreScoop2Rend.sprite = null;
+                    yield return new WaitForSeconds(scoopPopUpSpeed);
+                    scoreScoop3Rend.sprite = null;
+                yield return new WaitForSeconds(scoopPopUpSpeed);
+        }
+
+            else if (levelScore == 2 || levelScore == 1)
+                {
+                yield return new WaitForSeconds(scoopPopUpSpeed);
+                scoreScoop1Rend.sprite = silverScoop;
+                    yield return new WaitForSeconds(scoopPopUpSpeed);
+                    scoreScoop2Rend.sprite = silverScoop;
+                    yield return new WaitForSeconds(scoopPopUpSpeed);
+                    scoreScoop3Rend.sprite = null;
+                yield return new WaitForSeconds(scoopPopUpSpeed);
+        }
+
+            else if (levelScore >= 3)
+                {
+                yield return new WaitForSeconds(scoopPopUpSpeed);
+                scoreScoop1Rend.sprite = goldScoop;
+                    yield return new WaitForSeconds(scoopPopUpSpeed);
+                    scoreScoop2Rend.sprite = goldScoop;
+                    yield return new WaitForSeconds(scoopPopUpSpeed);
+                    scoreScoop3Rend.sprite = goldScoop;
+                yield return new WaitForSeconds(scoopPopUpSpeed);
+        }
+        
+    }
 
 }
