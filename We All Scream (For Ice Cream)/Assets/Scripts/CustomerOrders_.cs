@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 using TMPro;
 
 public enum orderEnum
@@ -21,6 +22,7 @@ public class CustomerOrders_ : MonoBehaviour
     public GameObject beginGameButton;
     public GameObject submitButton;
     public GameObject restartButton;
+    public AudioManager audioManager;
     public orderEnum orderEnum;
     public int orderCount = 0;
 
@@ -295,11 +297,13 @@ public class CustomerOrders_ : MonoBehaviour
 
                 if (beginGame)
                 {
+                    audioManager.PlaySound("WindowShutterOpen");
                     orderEnum = orderEnum.STATE_OPENING;
                 }
                 else
                 {
                     StartCoroutine(Wait(orderEnum.STATE_OPENING, shutterWaitTime));
+                    audioManager.PlaySound("WindowShutterOpen");
                 }
 
                 break;
@@ -308,6 +312,7 @@ public class CustomerOrders_ : MonoBehaviour
             case orderEnum.STATE_OPENING:
                 beginGame = false;
                 shutter.transform.position = Vector2.MoveTowards(shutter.transform.position, shutterOpen.transform.position, shutterSpeed * Time.deltaTime);
+
 
                 //Randomise Ingredients
                 orderCone = ingredients[0];
@@ -348,6 +353,7 @@ public class CustomerOrders_ : MonoBehaviour
                         orderNumber.text = (orderCount.ToString());
                         ChangeEmotionHappy();
                         StartCoroutine(Wait(orderEnum.STATE_CLOSING, shutterWaitTime));
+                        audioManager.PlaySound("WindowShutterClose");
                     }
                     else
                     {

@@ -43,6 +43,7 @@ public class LevelManager : MonoBehaviour
     public Transitions transitions;
     public CustomerOrders_ customerOrders;
     public Timer timer;
+    public AudioManager audioManager;
 
     public GameObject mainMenu;
     public GameObject submitButton;
@@ -266,8 +267,8 @@ public class LevelManager : MonoBehaviour
                 break;
 
             case LevelsEnum.STATE_SCORE:
-
-                if (nextDayTriggered == false)
+                
+                if (nextDayTriggered == false && audioManager.TimesUpFinished == true)
                 {
                     gameplayActive = false;
                     if (customerOrders.ShutterClosed())
@@ -360,11 +361,13 @@ public class LevelManager : MonoBehaviour
     public void StartGame()
     {
         LevelsEnum = LevelsEnum.STATE_FADE;
+        audioManager.PlaySound("ButtonClick");
     }
 
     public void ExitGame()
     {
         Debug.Log("Exiting Application...");
+        audioManager.PlaySound("ButtonClick");
         Application.Quit();
     }
 
@@ -469,14 +472,11 @@ public class LevelManager : MonoBehaviour
 
     public void TimesUp()
     {
+        audioManager.PlaySound("TimesUp");
         timer.runTimer = false;
         levelTimesUp = true;
         submitButton.SetActive(false);
         DisableGameButtons();
-        //Trigger sound
-
-        //if (sound is finished?
-
         customerOrders.orderEnum = orderEnum.STATE_CLOSING;
 
         if (customerOrders.ShutterClosed())
@@ -509,7 +509,7 @@ public class LevelManager : MonoBehaviour
 
     IEnumerator scoreResultPopUp(int levelScore)
     { 
-            if(levelScore == 0)
+            if(levelScore == 0 || levelScore == 1)
                 {
                 yield return new WaitForSeconds(scoopPopUpSpeed);
                 scoreScoop1Rend.sprite = bronzeScoop;
@@ -520,7 +520,7 @@ public class LevelManager : MonoBehaviour
                 yield return new WaitForSeconds(scoopPopUpSpeed);
         }
 
-            else if (levelScore == 2 || levelScore == 1)
+            else if (levelScore == 2 )
                 {
                 yield return new WaitForSeconds(scoopPopUpSpeed);
                 scoreScoop1Rend.sprite = silverScoop;

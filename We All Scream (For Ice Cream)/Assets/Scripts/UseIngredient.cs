@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 
 public class UseIngredient : MonoBehaviour
 
@@ -44,6 +45,7 @@ public class UseIngredient : MonoBehaviour
     public bool nettles = false;
 
     private SpriteRenderer Rend;
+    private AudioManager audioManager;
 
     //Flavours
     private Sprite plainCone, boneScoop, cosmicScoop, magmaScoop, meatScoop, tropicalScoop, acidSauce, bloodySauce, bloodyUnicornSauce, soulSauce, batteriesTop, eyeballsTop, gemsTop, glassTop, nettlesTop;
@@ -73,6 +75,7 @@ public class UseIngredient : MonoBehaviour
     private void Start()
     {
         Rend = GetComponent<SpriteRenderer>();
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
 
         //ErrorMsgs
         errorMsgs = GameObject.Find("ErrorMsgs");
@@ -184,6 +187,7 @@ public class UseIngredient : MonoBehaviour
                     {
                         scoop1Rend.sprite = tropicalScoop;
                     }
+                audioManager.PlaySound("Scoop");
             }
 
             //SCOOP 2 --- Check for scoop1 & empty sauce1 & scoop2
@@ -209,6 +213,8 @@ public class UseIngredient : MonoBehaviour
                     {
                         scoop2Rend.sprite = tropicalScoop;
                     }
+                audioManager.PlaySound("Scoop");
+
             }
 
             //SCOOP 3 --- Check for scoop2 & empty sauce2 & scoop3
@@ -234,6 +240,8 @@ public class UseIngredient : MonoBehaviour
                 {
                     scoop3Rend.sprite = tropicalScoop;
                 }
+                audioManager.PlaySound("Scoop");
+
             }
 
             //SCOOP 4 --- Check for scoop3 & empty sauce3 & scoop4
@@ -259,6 +267,8 @@ public class UseIngredient : MonoBehaviour
                 {
                     scoop4Rend.sprite = tropicalScoop;
                 }
+                audioManager.PlaySound("Scoop");
+
             }
 
             //SCOOP 5 --- Check for scoop4 & empty sauce4 & scoop5
@@ -284,6 +294,8 @@ public class UseIngredient : MonoBehaviour
                 {
                     scoop5Rend.sprite = tropicalScoop;
                 }
+                audioManager.PlaySound("Scoop");
+
             }
 
             //Enough Scoops
@@ -316,6 +328,8 @@ public class UseIngredient : MonoBehaviour
                 {
                     sauce1Rend.sprite = soulSauce;
                 }
+                audioManager.PlaySound("Sauce");
+
             }
 
             //SAUCE 2 --- Check for scoop2 & empty scoop3 & sauce2
@@ -337,6 +351,8 @@ public class UseIngredient : MonoBehaviour
                 {
                     sauce2Rend.sprite = soulSauce;
                 }
+                audioManager.PlaySound("Sauce");
+
             }
 
             //SAUCE 3 --- Check for scoop3 & empty scoop4 & sauce3
@@ -358,6 +374,8 @@ public class UseIngredient : MonoBehaviour
                 {
                     sauce3Rend.sprite = soulSauce;
                 }
+                audioManager.PlaySound("Sauce");
+
             }
 
             //SAUCE 4 --- Check for scoop4 & empty scoop5 & sauce4
@@ -379,6 +397,8 @@ public class UseIngredient : MonoBehaviour
                 {
                     sauce4Rend.sprite = soulSauce;
                 }
+                audioManager.PlaySound("Sauce");
+
             }
 
             //SAUCE 5 --- Check for scoop5 & empty sauce5
@@ -400,6 +420,8 @@ public class UseIngredient : MonoBehaviour
                 {
                     sauce5Rend.sprite = soulSauce;
                 }
+                audioManager.PlaySound("Sauce");
+
             }
 
             //Enough sauces
@@ -436,6 +458,8 @@ public class UseIngredient : MonoBehaviour
                 {
                     topping1Rend.sprite = nettlesTop;
                 }
+                audioManager.PlaySound("Topping");
+
             }
 
             //TOPPING 2 --- Check for sauce2 & empty topping2
@@ -461,6 +485,8 @@ public class UseIngredient : MonoBehaviour
                 {
                     topping2Rend.sprite = nettlesTop;
                 }
+                audioManager.PlaySound("Topping");
+
             }
 
             //TOPPING 3 --- Check for sauce3 & empty topping3
@@ -486,6 +512,8 @@ public class UseIngredient : MonoBehaviour
                 {
                     topping3Rend.sprite = nettlesTop;
                 }
+                audioManager.PlaySound("Topping");
+
             }
 
             //TOPPING 4 --- Check for sauce4 & empty topping4
@@ -511,6 +539,8 @@ public class UseIngredient : MonoBehaviour
                 {
                     topping4Rend.sprite = nettlesTop;
                 }
+                audioManager.PlaySound("Topping");
+
             }
 
             //TOPPING 5 --- Check for sauce5 & empty topping5
@@ -536,6 +566,8 @@ public class UseIngredient : MonoBehaviour
                 {
                     topping5Rend.sprite = nettlesTop;
                 }
+                audioManager.PlaySound("Topping");
+
             }
 
             //Enough toppings
