@@ -1,0 +1,29 @@
+﻿<Properties StartupConfiguration="{2301BA7F-0264-3876-688B-819403D2A6D6}|">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/LevelManager.cs">
+    <Files>
+      <File FileName="Assets/Scripts/CustomerOrders_.cs" Line="13" Column="18" />
+      <File FileName="Assets/Scripts/LevelManager.cs" Line="164" Column="46" />
+      <File FileName="Assets/Scripts/Transitions.cs" Line="55" Column="54" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="We All Scream (For Ice Cream)" expanded="True">
+            <Node name="Assets" expanded="True">
+              <Node name="Scripts" expanded="True">
+                <Node name="LevelManager.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="480b4aa8-a661-4a0a-b6c9-a87548896cb5" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

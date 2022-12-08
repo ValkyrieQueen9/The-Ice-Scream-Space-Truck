@@ -100,13 +100,13 @@ public class LevelManager : MonoBehaviour
                 levelTracker = 0;
                 level1OrderCount = 0;
                 level2OrderCount = 0;
+                nextLevel = 1;
                 levelNumber.text = "M";
                 mainMenu.SetActive(true);
                 gameplayActive = false;
                 nextDayTriggered = false;
                 scoreBanner.transform.position = bannerOffScreen;
                 DisableGameButtons();
-                //Create Sound bar - audio manager needed first
                
                 break;
 
@@ -139,50 +139,32 @@ public class LevelManager : MonoBehaviour
                     transitions.FadeOut();
                     fadeRunOnce += 1;
                 }
-                
-                //NEEDS ATTENTION!
-                if(transitions.fadeOutComplete) 
+
+                if (transitions.fadeOutComplete)
+                {
+                    if (nextLevel == 1)
                     {
-                    if (levelTracker == 0) //If on start menu, go to tutorial
-                        {
-                            LevelsEnum = LevelsEnum.STATE_TUTORIAL;
-                            fadeRunOnce = 0;
-                        }
-                    if (levelTracker == 1) //If on tutorial, go to level 1
-                        {
-                            LevelsEnum = LevelsEnum.STATE_LEVEL1;
-                            fadeRunOnce = 0;
-                        }
-                    if (levelTracker == 2) //If on level 1, go to score
-                        {
-                            LevelsEnum = LevelsEnum.STATE_SCORE;
-                            customerOrders.orderCount = 0;
-                            fadeRunOnce = 0;
-                        }
-                    if (levelTracker == 3) //If on score, go to level 2
-                        {
-                            LevelsEnum = LevelsEnum.STATE_LEVEL2;
-                            customerOrders.orderCount = 0;
-                            fadeRunOnce = 0;
-                        }
-                    if (levelTracker == 4) //If on score, go to next level - will need tweaking when new levels added
-                        {
-                            LevelsEnum = LevelsEnum.STATE_LEVEL2;
-                            fadeRunOnce = 0;
-                        }
-                    if (levelTracker == 5) //If on end, go to main menu
-                        {
-                            LevelsEnum = LevelsEnum.STATE_MENU;
-                            fadeRunOnce = 0;
-                        }
-                    if (levelTracker >= 100) //If on any level, go to start (pause menu exit?)
-                        {
-                            LevelsEnum = LevelsEnum.STATE_MENU;
-                            fadeRunOnce = 0;
-                        }
-                    transitions.FadeIn();
+                        LevelsEnum = LevelsEnum.STATE_TUTORIAL;
+                        fadeRunOnce = 0;
+                        StartCoroutine(transitions.LoadingScreen(transitions.Lvl1LoadingScreen));
                     }
 
+                    if (nextLevel == 2)
+                    {
+                        LevelsEnum = LevelsEnum.STATE_START;
+                        customerOrders.orderCount = 0;
+                        fadeRunOnce = 0;
+                        StartCoroutine(transitions.LoadingScreen(transitions.Lvl2LoadingScreen));
+                    }
+
+                    if(nextLevel == 0)
+                    {
+                        LevelsEnum = LevelsEnum.STATE_MENU;
+                        fadeRunOnce = 0;
+                        transitions.FadeIn();
+                    }
+
+                }
                 break;
 
             case LevelsEnum.STATE_START:
@@ -221,7 +203,7 @@ public class LevelManager : MonoBehaviour
                      if (nextLevel == 2)
                      {
                            nextDayTriggered = false;
-                           LevelsEnum = LevelsEnum.STATE_LEVEL2;
+                           LevelsEnum = LevelsEnum.STATE_FADE;
                      }
                      if (nextLevel == 3)
                      {
@@ -388,7 +370,7 @@ public class LevelManager : MonoBehaviour
         nextDayTriggered = true;
         gameplayActive = true;
         levelTimesUp = false;
-        LevelsEnum = LevelsEnum.STATE_START;
+        LevelsEnum = LevelsEnum.STATE_FADE;
         audioManager.PlaySound("ButtonClick");
 
     }
@@ -530,7 +512,7 @@ public class LevelManager : MonoBehaviour
             else if (levelScore == 2 )
                 {
                 yield return new WaitForSeconds(scoopPopUpSpeed);
-                scoreScoop1Rend.sprite = silverScoop;
+                scoreScoop1Rend.sprite = bronzeScoop;
                     yield return new WaitForSeconds(scoopPopUpSpeed);
                     scoreScoop2Rend.sprite = silverScoop;
                     yield return new WaitForSeconds(scoopPopUpSpeed);
@@ -541,9 +523,9 @@ public class LevelManager : MonoBehaviour
             else if (levelScore >= 3)
                 {
                 yield return new WaitForSeconds(scoopPopUpSpeed);
-                scoreScoop1Rend.sprite = goldScoop;
+                scoreScoop1Rend.sprite = bronzeScoop;
                     yield return new WaitForSeconds(scoopPopUpSpeed);
-                    scoreScoop2Rend.sprite = goldScoop;
+                    scoreScoop2Rend.sprite = silverScoop;
                     yield return new WaitForSeconds(scoopPopUpSpeed);
                     scoreScoop3Rend.sprite = goldScoop;
                 yield return new WaitForSeconds(scoopPopUpSpeed);
