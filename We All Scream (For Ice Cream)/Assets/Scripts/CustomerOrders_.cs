@@ -51,9 +51,10 @@ public class CustomerOrders_ : MonoBehaviour
     private bool ignoreThis = true;
 
     //Customer Sprites
-    private GameObject customerSpaceObj;
     private SpriteRenderer customerSpaceRend;
-    private Sprite demonNormal, demonHappy, demonAngry, fireBoiNormal, fireBoiHappy, fireBoiAngry, funGuyNormal, funGuyHappy, funGuyAngry, witchNormal, witchHappy, witchAngry;
+    private SpriteRenderer customerBGRend;
+    private Sprite level1Window, level2Window;
+    private Sprite demonNormal, demonHappy, demonAngry, fireBoiNormal, fireBoiHappy, fireBoiAngry,  shadyNormal, shadyHappy, shadyAngry, funGuyNormal, funGuyHappy, funGuyAngry, witchNormal, witchHappy, witchAngry, tinyNormal, tinyHappy, tinyAngry;
 
     //Submission Checklist
     private bool coneResult, scoop1Result, scoop2Result, scoop3Result, scoop4Result, scoop5Result, sauceResult, toppingResult, submitResult = false;
@@ -105,20 +106,31 @@ public class CustomerOrders_ : MonoBehaviour
         restartButton.SetActive(false);
 
         //Customer Sprites
-        customerSpaceObj = GameObject.Find("CustomerSpace");
-        customerSpaceRend = customerSpaceObj.GetComponent<SpriteRenderer>();
+        customerSpaceRend = GameObject.Find("CustomerSpace").GetComponent<SpriteRenderer>();
+        customerBGRend = GameObject.Find("CustomerBG").GetComponent<SpriteRenderer>();
+
+        level1Window = Resources.Load<Sprite>("backgrounds/level1Window");
+        level2Window = Resources.Load<Sprite>("backgrounds/level2Window");
+
         fireBoiNormal = Resources.Load<Sprite>("customers/fireBoi0");
         fireBoiHappy = Resources.Load<Sprite>("customers/fireBoi1");
         fireBoiAngry = Resources.Load<Sprite>("customers/fireBoi2");
         demonNormal = Resources.Load<Sprite>("customers/demon0");
         demonHappy = Resources.Load<Sprite>("customers/demon1");
         demonAngry = Resources.Load<Sprite>("customers/demon2");
+        shadyNormal = Resources.Load<Sprite>("customers/shady0");
+        shadyHappy = Resources.Load<Sprite>("customers/shady1");
+        shadyAngry = Resources.Load<Sprite>("customers/shady2");
+
         funGuyNormal = Resources.Load<Sprite>("customers/funGuy0");
         funGuyHappy = Resources.Load<Sprite>("customers/funGuy1");
         funGuyAngry = Resources.Load<Sprite>("customers/funGuy2");
         witchNormal = Resources.Load<Sprite>("customers/witch0");
         witchHappy = Resources.Load<Sprite>("customers/witch1");
         witchAngry = Resources.Load<Sprite>("customers/witch2");
+        tinyNormal = Resources.Load<Sprite>("customers/tiny0");
+        tinyHappy = Resources.Load<Sprite>("customers/tiny1");
+        tinyAngry = Resources.Load<Sprite>("customers/tiny2");
 
         //Level Manager
         levelManagerObj = GameObject.Find("Level Manager");
@@ -274,11 +286,13 @@ public class CustomerOrders_ : MonoBehaviour
 
                 if (levelManager.LevelsEnum == LevelsEnum.STATE_LEVEL1)
                 {
+                    customerBGRend.sprite = level1Window;
                     customerSpaceRend.sprite = fireBoiNormal;
                 }
 
                 if (levelManager.LevelsEnum == LevelsEnum.STATE_LEVEL2)
                 {
+                    customerBGRend.sprite = level2Window;
                     customerSpaceRend.sprite = funGuyNormal;
                 }
 
@@ -456,12 +470,16 @@ public class CustomerOrders_ : MonoBehaviour
         //Unsure how this will work with more customers
         if (levelManager.LevelsEnum == LevelsEnum.STATE_LEVEL1)
         {
-
+            customerBGRend.sprite = level1Window;
             if (customerSpaceRend.sprite == fireBoiNormal || customerSpaceRend.sprite == fireBoiHappy || customerSpaceRend.sprite == fireBoiAngry)
             {
                 customerSpaceRend.sprite = demonNormal;
             }
             else if (customerSpaceRend.sprite == demonNormal || customerSpaceRend.sprite == demonHappy || customerSpaceRend.sprite == demonAngry)
+            {
+                customerSpaceRend.sprite = shadyNormal;
+            }
+            else if (customerSpaceRend.sprite == shadyNormal || customerSpaceRend.sprite == shadyHappy || customerSpaceRend.sprite == shadyAngry)
             {
                 customerSpaceRend.sprite = fireBoiNormal;
             }
@@ -469,11 +487,17 @@ public class CustomerOrders_ : MonoBehaviour
 
         if (levelManager.LevelsEnum == LevelsEnum.STATE_LEVEL2)
         {
+            customerBGRend.sprite = level2Window;
+
             if (customerSpaceRend.sprite == witchNormal || customerSpaceRend.sprite == witchHappy || customerSpaceRend.sprite == witchAngry)
             {
                 customerSpaceRend.sprite = funGuyNormal;
             }
             else if (customerSpaceRend.sprite == funGuyNormal || customerSpaceRend.sprite == funGuyHappy || customerSpaceRend.sprite == funGuyAngry)
+            {
+                customerSpaceRend.sprite = tinyNormal;
+            }
+            else if (customerSpaceRend.sprite == tinyNormal || customerSpaceRend.sprite == tinyHappy || customerSpaceRend.sprite == tinyAngry)
             {
                 customerSpaceRend.sprite = witchNormal;
             }
@@ -492,6 +516,11 @@ public class CustomerOrders_ : MonoBehaviour
             customerSpaceRend.sprite = fireBoiHappy;
         }
 
+        else if (customerSpaceRend.sprite == shadyNormal || customerSpaceRend.sprite == shadyAngry)
+        {
+            customerSpaceRend.sprite = shadyHappy;
+        }
+
         else if (customerSpaceRend.sprite == funGuyNormal || customerSpaceRend.sprite == funGuyAngry)
         {
             customerSpaceRend.sprite = funGuyHappy;
@@ -500,6 +529,11 @@ public class CustomerOrders_ : MonoBehaviour
         else if (customerSpaceRend.sprite == witchNormal || customerSpaceRend.sprite == witchAngry)
         {
             customerSpaceRend.sprite = witchHappy;
+        }
+        
+        else if (customerSpaceRend.sprite == tinyNormal || customerSpaceRend.sprite == tinyAngry)
+        {
+            customerSpaceRend.sprite = tinyHappy;
         }
     }
 
@@ -515,6 +549,11 @@ public class CustomerOrders_ : MonoBehaviour
             customerSpaceRend.sprite = fireBoiAngry;
         }
 
+        else if (customerSpaceRend.sprite == shadyNormal || customerSpaceRend.sprite == shadyHappy)
+        {
+            customerSpaceRend.sprite = shadyAngry;
+        }
+
         else if (customerSpaceRend.sprite == funGuyNormal || customerSpaceRend.sprite == funGuyHappy)
         {
             customerSpaceRend.sprite = funGuyAngry;
@@ -523,6 +562,11 @@ public class CustomerOrders_ : MonoBehaviour
         else if (customerSpaceRend.sprite == witchNormal || customerSpaceRend.sprite == witchHappy)
         {
             customerSpaceRend.sprite = witchAngry;
+        }
+
+        else if (customerSpaceRend.sprite == tinyNormal || customerSpaceRend.sprite == tinyHappy)
+        {
+            customerSpaceRend.sprite = tinyAngry;
         }
     }
 

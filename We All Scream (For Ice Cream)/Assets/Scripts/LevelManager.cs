@@ -196,6 +196,7 @@ public class LevelManager : MonoBehaviour
                 }
                 if(tutorialBanner.transform.position == bannerOffScreen)
                 {
+                    gameplayActive = true;
                     tutorialEmpty.SetActive(false);
                 }
 
@@ -240,6 +241,7 @@ public class LevelManager : MonoBehaviour
                 {
                     Debug.Log("Level 1 Times Up!");
                     TimesUp();
+                    gameplayActive = false;
                     level1OrderCount = customerOrders.orderCount;
                 }
 
@@ -255,6 +257,7 @@ public class LevelManager : MonoBehaviour
                 {
                     Debug.Log("Level 2 Times Up!");
                     TimesUp();
+                    gameplayActive = false;
                     level2OrderCount = customerOrders.orderCount;
                 }
 
@@ -374,8 +377,9 @@ public class LevelManager : MonoBehaviour
     public void TutorialNext()
     {
         transitions.fadeInComplete = false;
-        gameplayActive = true;
         LevelsEnum = LevelsEnum.STATE_START;
+        audioManager.PlaySound("ButtonClick");
+
     }
 
     public void NextDay()
@@ -385,17 +389,20 @@ public class LevelManager : MonoBehaviour
         gameplayActive = true;
         levelTimesUp = false;
         LevelsEnum = LevelsEnum.STATE_START;
+        audioManager.PlaySound("ButtonClick");
+
     }
 
     public void Continue()
     {
         continueTriggered = true;
-        Debug.Log("Continue Clicked...");
         scoreScoopsPanel.SetActive(false);
         contButton.SetActive(false);
         scoreText.SetActive(false);
         scoreLevelText.SetActive(false);
         scoreOrderNum.SetActive(false);
+        audioManager.PlaySound("ButtonClick");
+
 
         endText.SetActive(true);
         endButton.SetActive(true);
