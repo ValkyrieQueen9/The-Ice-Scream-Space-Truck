@@ -24,7 +24,11 @@ public class AudioManager : MonoBehaviour
             s.source.volume = s.volume;
             s.source.pitch = s.pitch;
             s.source.loop = s.loop;
+            s.source.playOnAwake = s.playOnAwake;
         }
+
+        Sound theme = Array.Find(sounds, sound => sound.name == "Theme");
+        volumeSlider.value = theme.source.volume;
 
         PlaySound("Theme");
     }

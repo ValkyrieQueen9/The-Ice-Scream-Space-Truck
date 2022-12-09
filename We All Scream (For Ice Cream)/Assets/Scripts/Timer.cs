@@ -13,6 +13,7 @@ public class Timer : MonoBehaviour
     public bool takingAway = false;
     public bool runTimer = false;
 
+
     void Start()
     {
         timerSlider = timeBar.GetComponent<Slider>();

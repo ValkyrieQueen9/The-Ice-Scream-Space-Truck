@@ -49,16 +49,17 @@ public class LevelManager : MonoBehaviour
     public GameObject submitButton;
     public GameObject beginGameButton;
     public GameObject ingredientButtons;
-    public GameObject tutorialEmpty, tutorialBGShade, tutorialBanner, tutorialNext, tutorialWords;
-    //public GameObject tutorialBack;
+    public GameObject tutorialEmpty, tutorialBGShade, tutorialBanner, tutorialNext, tutorialBack, tutorialSkip, tutorialContent;
     public GameObject scorePanel, scoreBGShade, scoreBanner, scoreNext, scoreText, scoreLevelText, scoreOrderNum;
     public GameObject scoreScoopsPanel, scoreScoop1, scoreScoop2, scoreScoop3;
     public GameObject endPanel, contButton, endText, endButton;
 
+    private int tutorialPage = 0;
     private int fadeRunOnce = 0;
     private Vector3 bannerOffScreen, bannerOnScreen, bannerOffScreenRight;
+    private Sprite tutPage0, tutPage1, tutPage2, tutPage3, tutPage4, tutPage5, tutPage6;
     private Sprite bronzeScoop, silverScoop, goldScoop;
-    private SpriteRenderer tutorialBGShadeRend, scoreScoop1Rend, scoreScoop2Rend, scoreScoop3Rend;
+    private SpriteRenderer tutorialBGShadeRend, tutorialContentRend, scoreScoop1Rend, scoreScoop2Rend, scoreScoop3Rend;
     private GameObject[] gameplayButtons;
 
     void Start()
@@ -66,24 +67,40 @@ public class LevelManager : MonoBehaviour
         fadeRunOnce = 0;
         levelNumber.text = "0";
         LevelsEnum = LevelsEnum.STATE_MENU;
+
         bannerOffScreen = new Vector3(-39, 0);
         bannerOnScreen = new Vector3(0,0);
         bannerOffScreenRight = new Vector3(39, 0);
+
         tutorialBanner.transform.position = bannerOffScreen;
         scoreBanner.transform.position = bannerOffScreen;
+
         tutorialEmpty.SetActive(false);
         scorePanel.SetActive(false);
         endPanel.SetActive(false);
         mainMenu.SetActive(true);
         scoreScoopsPanel.SetActive(false);
+
         gameplayButtons = GameObject.FindGameObjectsWithTag("Gameplay Buttons");
+
         tutorialBGShadeRend = tutorialBGShade.GetComponent<SpriteRenderer>();
+        tutorialContentRend = tutorialContent.GetComponent<SpriteRenderer>();
         scoreScoop1Rend = scoreScoop1.GetComponent<SpriteRenderer>();
         scoreScoop2Rend = scoreScoop2.GetComponent<SpriteRenderer>();
         scoreScoop3Rend = scoreScoop3.GetComponent<SpriteRenderer>();
+
         bronzeScoop = Resources.Load<Sprite>("score/bronzeScoop");
         silverScoop = Resources.Load<Sprite>("score/silverScoop");
         goldScoop = Resources.Load<Sprite>("score/goldScoop");
+
+        tutPage0 = Resources.Load<Sprite>("tutorial/tutPage0");
+        tutPage1 = Resources.Load<Sprite>("tutorial/tutPage1");
+        tutPage2 = Resources.Load<Sprite>("tutorial/tutPage2");
+        tutPage3 = Resources.Load<Sprite>("tutorial/tutPage3");
+        tutPage4 = Resources.Load<Sprite>("tutorial/tutPage4");
+        tutPage5 = Resources.Load<Sprite>("tutorial/tutPage5");
+        tutPage6 = Resources.Load<Sprite>("tutorial/tutPage6");
+
     }
 
 
@@ -100,11 +117,13 @@ public class LevelManager : MonoBehaviour
                 levelTracker = 0;
                 level1OrderCount = 0;
                 level2OrderCount = 0;
+                tutorialPage = 0;
                 nextLevel = 1;
                 levelNumber.text = "M";
                 mainMenu.SetActive(true);
                 gameplayActive = false;
                 nextDayTriggered = false;
+                tutorialContentRend.sprite = tutPage0;
                 scoreBanner.transform.position = bannerOffScreen;
                 DisableGameButtons();
                
@@ -115,19 +134,21 @@ public class LevelManager : MonoBehaviour
                 levelTracker = 1;
                 levelNumber.text = "T";
                 nextLevel = 1;
+                tutorialBanner.transform.position = bannerOnScreen;
+
                 mainMenu.SetActive(false);
                 tutorialEmpty.SetActive(true);
-                tutorialNext.SetActive(false);
-                tutorialWords.SetActive(false);
-                tutorialBanner.transform.position = bannerOnScreen;
                 tutorialNext.SetActive(true);
-                tutorialWords.SetActive(true);
-                        //Appear Text
+                tutorialSkip.SetActive(true);
+                tutorialContent.SetActive(true);
 
-                //show arrows for next back slides
-                //if next button clicked appear new instructions
-                //use methods for each page of instructions - showTut1() - deactivate current strip and activate correct
-                //if last continue button clicked, move banner back to starting pos and fade out BG using Alpha colour setting
+                if (tutorialPage >= 1)
+                {
+                    tutorialBack.SetActive(true);
+                }
+                else tutorialBack.SetActive(false);
+
+                //Tutorial Next switches pages
 
                 break;
 
@@ -171,12 +192,14 @@ public class LevelManager : MonoBehaviour
                 levelNumber.text = "0";
                 if(tutorialBanner.activeSelf)
                 {
-                    tutorialBanner.transform.position = Vector3.MoveTowards(tutorialBanner.transform.position, bannerOffScreen, bannerSpeed * Time.deltaTime);
+                    tutorialBanner.transform.position = Vector3.MoveTowards(tutorialBanner.transform.position, bannerOffScreenRight, bannerSpeed * Time.deltaTime);
                     tutorialBGShadeRend.color = new Color (0,0,0,0);
                     tutorialNext.SetActive(false);
-                    tutorialWords.SetActive(false);
+                    tutorialBack.SetActive(false);
+                    tutorialSkip.SetActive(false);
+                    tutorialContent.SetActive(false);
                 }
-                if(tutorialBanner.transform.position == bannerOffScreen)
+                if(tutorialBanner.transform.position == bannerOffScreenRight)
                 {
                     gameplayActive = true;
                     tutorialEmpty.SetActive(false);
@@ -358,10 +381,99 @@ public class LevelManager : MonoBehaviour
 
     public void TutorialNext()
     {
-        transitions.fadeInComplete = false;
-        LevelsEnum = LevelsEnum.STATE_START;
         audioManager.PlaySound("ButtonClick");
 
+        if (tutorialPage == 0)
+        {
+            tutorialContentRend.sprite = tutPage1;
+            tutorialPage = 1;
+        }
+
+        else if (tutorialPage == 1)
+        {
+            tutorialContentRend.sprite = tutPage2;
+            tutorialPage = 2;
+        }
+
+        else if (tutorialPage == 2)
+        {
+            tutorialContentRend.sprite = tutPage3;
+            tutorialPage = 3;
+        }
+
+        else if (tutorialPage == 3)
+        {
+            tutorialContentRend.sprite = tutPage4;
+            tutorialPage = 4;
+        }
+
+        else if (tutorialPage == 4)
+        {
+            tutorialContentRend.sprite = tutPage5;
+            tutorialPage = 5;
+        }
+
+        else if (tutorialPage == 5)
+        {
+            tutorialContentRend.sprite = tutPage6;
+            tutorialPage = 6;
+        }
+
+        else if (tutorialPage == 6)
+        {
+            LevelsEnum = LevelsEnum.STATE_START;
+            tutorialPage = 0;
+        }
+
+    }
+
+    public void TutorialBack()
+    {
+        audioManager.PlaySound("ButtonClick");
+
+        if (tutorialPage == 1)
+        {
+            tutorialContentRend.sprite = tutPage0;
+            tutorialPage = 0;
+        }
+
+        if (tutorialPage == 2)
+        {
+            tutorialContentRend.sprite = tutPage1;
+            tutorialPage = 1;
+        }
+
+        else if (tutorialPage == 3)
+        {
+            tutorialContentRend.sprite = tutPage2;
+            tutorialPage = 2;
+        }
+
+        else if (tutorialPage == 4)
+        {
+            tutorialContentRend.sprite = tutPage3;
+            tutorialPage = 3;
+        }
+
+        else if (tutorialPage == 5)
+        {
+            tutorialContentRend.sprite = tutPage4;
+            tutorialPage = 4;
+        }
+
+        else if (tutorialPage == 6)
+        {
+            tutorialContentRend.sprite = tutPage5;
+            tutorialPage = 5;
+        }
+
+    }
+
+    public void TutorialSkip()
+    {
+        audioManager.PlaySound("ButtonClick");
+        LevelsEnum = LevelsEnum.STATE_START;
+        tutorialPage = 0;
     }
 
     public void NextDay()

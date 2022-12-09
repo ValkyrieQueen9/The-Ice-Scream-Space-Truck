@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
 
 public class Transitions : MonoBehaviour
 {
     public GameObject videoCanvas;
     public GameObject Lvl1LoadingScreen;
     public GameObject Lvl2LoadingScreen;
+    public VideoPlayer Lvl1VideoPlayer;
+    public VideoPlayer Lvl2VideoPlayer;
     public Animator animator;
     public bool fadeComplete = false;
     public bool fadeOutComplete = false;
@@ -49,10 +52,10 @@ public class Transitions : MonoBehaviour
     {
         if(fadeOutComplete)
         {
-                videoCanvas.SetActive(true);
+
+            videoCanvas.SetActive(true);
             if (levelLoading.name == "Lvl1LS")
             {
-                Debug.Log("Activating video Canvas");
                 Lvl2LoadingScreen.SetActive(false);
             }
             if (levelLoading.name == "Lvl2LS")
@@ -60,7 +63,6 @@ public class Transitions : MonoBehaviour
                 videoCanvas.SetActive(true);
                 Lvl1LoadingScreen.SetActive(false);
             }
-            Debug.Log("Loading Screen CoRoutine called");
             levelLoading.SetActive(true);
             yield return new WaitForSeconds(5f);
             levelLoading.SetActive(false);
